@@ -11,6 +11,8 @@ public class Airfield {
 
     boolean showArmors = false;
     boolean showGuns = false;
+    boolean showEngines = false;
+    boolean showBombs = false;
 
     Texture airfieldTexture;
     Sprite airfield;
@@ -29,45 +31,78 @@ public class Airfield {
 
     OrthographicCamera camera;
 
+    float gunsY;
+    float armorsY;
+    float enginesY;
+    float bombsY;
+
+
     public void create(OrthographicCamera camera) {
-
+        int sc = 2;
         this.camera = camera;
-        airfieldTexture = new Texture("airfield.png");
+        airfieldTexture = new Texture("airfield2.png");
 
-        airfield = new Sprite(airfieldTexture, 250, 0, 320, 568);
+        airfield = new Sprite(airfieldTexture, 250*sc, 0, 640, 1280);
 
-        gun1 = new Sprite(airfieldTexture,  0, 0, 70, 90);
-        gun2 = new Sprite(airfieldTexture, 70, 0, 70, 90);
-        gun3 = new Sprite(airfieldTexture, 140,0, 70, 90);
+        gun1 = new Sprite(airfieldTexture,  0, 0, 70*sc, 90*sc);
+        gun2 = new Sprite(airfieldTexture, 70*sc, 0, 70*sc, 90*sc);
+        gun3 = new Sprite(airfieldTexture, 140*sc,0, 70*sc, 90*sc);
 
-        bomb2 = new Sprite(airfieldTexture, 0,90,70,90);
-        bomb1 = new Sprite(airfieldTexture, 70,90,70,90);
-        bomb3 = new Sprite(airfieldTexture, 70,360,70,90);
+        bomb2 = new Sprite(airfieldTexture, 0*sc,90*sc,70*sc,90*sc);
+        bomb1 = new Sprite(airfieldTexture, 70*sc,90*sc,70*sc,90*sc);
+        bomb3 = new Sprite(airfieldTexture, 70*sc,360*sc,70*sc,90*sc);
 
-        armour1 = new Sprite(airfieldTexture, 140,90,70,90);
-        armour2 = new Sprite(airfieldTexture, 0,180,70,90);
-        armour3 = new Sprite(airfieldTexture, 70,180,70,90);
+        armour1 = new Sprite(airfieldTexture, 140*sc,90*sc,70*sc,90*sc);
+        armour2 = new Sprite(airfieldTexture, 0*sc,180*sc,70*sc,90*sc);
+        armour3 = new Sprite(airfieldTexture, 70*sc,180*sc,70*sc,90*sc);
 
-        engine3 = new Sprite(airfieldTexture, 140,180,70,90);
-        engine2 = new Sprite(airfieldTexture, 0,270,70,90);
-        engine1 = new Sprite(airfieldTexture, 70,270,70,90);
+        engine3 = new Sprite(airfieldTexture, 140*sc,180*sc,70*sc,90*sc);
+        engine2 = new Sprite(airfieldTexture, 0*sc,270*sc,70*sc,90*sc);
+        engine1 = new Sprite(airfieldTexture, 70*sc,270*sc,70*sc,90*sc);
 
 
         float scale = camera.viewportWidth / airfield.getWidth();
+        float w = airfield.getWidth() * scale;
         float h = airfield.getHeight() * scale;
-        float y = camera.viewportHeight - h;
+        float y = 0f;
+        float x = 0f;
 
-        airfield.setBounds(0, y, camera.viewportWidth, h);
+        airfield.setBounds(x, y, w, h);
 
-        y = 95f;
-        gun1.setBounds(112f * scale, y * scale, gun1.getWidth() * scale, gun1.getHeight() * scale);
-        gun2.setBounds(181f * scale, y * scale, gun2.getWidth() * scale, gun2.getHeight() * scale);
-        gun3.setBounds(250f * scale, y * scale, gun3.getWidth() * scale, gun3.getHeight() * scale);
+        float gap = 3f * scale;
 
-        y = 190f;
-        armour1.setBounds(137f * scale, y * scale, armour1.getWidth() * scale, armour1.getHeight() * scale);
-        armour2.setBounds(70f * scale, y * scale, armour2.getWidth() * scale, armour2.getHeight() * scale);
-        armour3.setBounds(2f * scale, y * scale, armour3.getWidth() * scale, armour3.getHeight() * scale);
+        w = gun1.getWidth() * scale;
+        x = (camera.viewportWidth / 3f);
+        gunsY = y = 390f;
+        gun1.setBounds(x,                 y * scale, gun1.getWidth() * scale, gun1.getHeight() * scale);
+        gun2.setBounds(x + ((w + gap) * 1) , y * scale, gun2.getWidth() * scale, gun2.getHeight() * scale);
+        gun3.setBounds(x + ((w + gap) * 2), y * scale, gun3.getWidth() * scale, gun3.getHeight() * scale);
+
+        x = ((camera.viewportWidth / 3f) * 2f) - w;
+        armorsY = y = 190f;
+        armour1.setBounds(x,                   y * scale, armour1.getWidth() * scale, armour1.getHeight() * scale);
+        armour2.setBounds(x - ((w + gap) * 1), y * scale, armour2.getWidth() * scale, armour2.getHeight() * scale);
+        armour3.setBounds(x - ((w + gap) * 2), y * scale, armour3.getWidth() * scale, armour3.getHeight() * scale);
+
+
+        x = (camera.viewportWidth / 3f);
+        bombsY = y = 777f;
+        bomb1.setBounds(x,                 y * scale, bomb1.getWidth() * scale, bomb1.getHeight() * scale);
+        bomb2.setBounds(x + ((w + gap) * 1) , y * scale, bomb2.getWidth() * scale, bomb2.getHeight() * scale);
+        bomb3.setBounds(x + ((w + gap) * 2), y * scale, bomb3.getWidth() * scale, bomb3.getHeight() * scale);
+
+
+        x = ((camera.viewportWidth / 3f) * 2f) - w;
+        enginesY = y = 585f;
+        engine1.setBounds(x,                   y * scale, engine1.getWidth() * scale, engine1.getHeight() * scale);
+        engine2.setBounds(x - ((w + gap) * 1), y * scale, engine2.getWidth() * scale, engine2.getHeight() * scale);
+        engine3.setBounds(x - ((w + gap) * 2), y * scale, engine3.getWidth() * scale, engine3.getHeight() * scale);
+
+
+        armorsY *= scale;
+        gunsY *= scale;
+        bombsY *= scale;
+        enginesY *= scale;
     }
 
     public void render(SpriteBatch batch) {
@@ -86,16 +121,51 @@ public class Airfield {
             armour3.draw(batch);
         }
 
+        if (showBombs) {
+            bomb1.draw(batch);
+            bomb2.draw(batch);
+            bomb3.draw(batch);
+        }
 
+        if (showEngines) {
+            engine1.draw(batch);
+            engine2.draw(batch);
+            engine3.draw(batch);
+        }
+    }
+
+
+    private boolean isInsideY(Vector3 position, float y) {
+        float oneThird = camera.viewportWidth / 3f;
+        float upperY = y + oneThird;
+        float lowerY = y;
+        if ((position.y > lowerY) && (position.y < upperY)) {
+            return true;
+        }
+        return false;
     }
 
     public void touchDown(Vector3 position) {
-        if (position.x > 600f && position.x < camera.viewportWidth) {
-            showArmors = !showArmors;
+        System.out.println("touchdown vec3 position x: " + position.x + ", y: " + position.y);
+        float oneThird = camera.viewportWidth / 3f;
+        if (position.x > (oneThird * 2f) && position.x < camera.viewportWidth) {
+            if (isInsideY(position, armorsY)) {
+                showArmors = !showArmors;
+            }
+
+            if (isInsideY(position, enginesY)) {
+                showEngines = !showEngines;
+            }
         }
 
-        if (position.x > 0 && position.x < 260f) {
-            showGuns = !showGuns;
+        if (position.x > 0 && position.x < oneThird) {
+            if (isInsideY(position, gunsY)) {
+                showGuns = !showGuns;
+            }
+
+            if (isInsideY(position, bombsY)) {
+                showBombs = !showBombs;
+            }
         }
     }
 }

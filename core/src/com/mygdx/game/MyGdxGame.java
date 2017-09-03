@@ -62,12 +62,12 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
         airfieldScreen.create(camera);
 
-        float scale = camera.viewportWidth / 320f;
+        float scale = camera.viewportWidth / 640f;
 
         player.setOriginCenter();
-        player.setScale(1.8f);
+        player.setScale(scale);
         player.setX((camera.viewportWidth / 2f) - player.getWidth() / 2f);
-        player.setY(10f * scale);
+        player.setY(scale * 2f);
 	}
 
 	@Override
@@ -157,7 +157,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        System.out.println("screenX: " + screenX + ", screenY: " + screenY);
+        int y = (int)camera.viewportHeight - screenY;
+        System.out.println("screenX: " + screenX + ", screenY: " + y);
 
         Vector3 position = camera.unproject(new Vector3(screenX, screenY, 0));
 
