@@ -42,7 +42,7 @@ public class Airfield {
         this.camera = camera;
         airfieldTexture = new Texture("airfield2.png");
 
-        airfield = new Sprite(airfieldTexture, 250*sc, 0, 640, 1280);
+        airfield = new Sprite(airfieldTexture, 250*sc, 0, 640, 1440);
 
         gun1 = new Sprite(airfieldTexture,  0, 0, 70*sc, 90*sc);
         gun2 = new Sprite(airfieldTexture, 70*sc, 0, 70*sc, 90*sc);
@@ -133,7 +133,6 @@ public class Airfield {
             engine3.draw(batch);
         }
     }
-
 
     private boolean isInsideY(Vector3 position, float y) {
         float oneThird = camera.viewportWidth / 3f;

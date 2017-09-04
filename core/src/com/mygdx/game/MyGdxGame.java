@@ -24,6 +24,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 
     Airfield airfieldScreen;
+    MainMenu mainMenuScreen;
 
     final int SPAWN_DELTA = 1000;
     final int COLUMNS = 6;
@@ -41,6 +42,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 	public void create () {
 
         airfieldScreen = new Airfield();
+
+        mainMenuScreen = new MainMenu();
 
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
@@ -61,13 +64,14 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         Gdx.input.setInputProcessor(this);
 
         airfieldScreen.create(camera);
+        mainMenuScreen.create(camera);
 
         float scale = camera.viewportWidth / 640f;
 
         player.setOriginCenter();
-        player.setScale(scale);
+        player.setScale(scale * 1.5f);
         player.setX((camera.viewportWidth / 2f) - player.getWidth() / 2f);
-        player.setY(scale * 2f);
+        player.setY(100f * scale);
 	}
 
 	@Override
@@ -92,10 +96,10 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
 
 		//batch.draw(img, x, y);
         airfieldScreen.render(batch);
-
         player.draw(batch);
+        batch.end();
 
-		batch.end();
+        mainMenuScreen.render();
 	}
 	
 	@Override
