@@ -15,16 +15,16 @@ import com.badlogic.gdx.utils.TimeUtils;
 import java.util.ArrayList;
 
 
-public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
+public class TokyoRushGame extends ApplicationAdapter implements InputProcessor {
 	SpriteBatch batch;
 	Texture img;
 
     Texture playerHudFonts;
     Sprite player;
 
-
     Airfield airfieldScreen;
     MainMenu mainMenuScreen;
+    Screen currentScreen;
 
     final int SPAWN_DELTA = 1000;
     final int COLUMNS = 6;
@@ -72,6 +72,8 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         player.setScale(scale * 1.5f);
         player.setX((camera.viewportWidth / 2f) - player.getWidth() / 2f);
         player.setY(100f * scale);
+
+        currentScreen = airfieldScreen;
 	}
 
 	@Override
@@ -95,11 +97,10 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
         float y = (Gdx.graphics.getHeight() / 2f) - (img.getHeight() / 2f);
 
 		//batch.draw(img, x, y);
-        airfieldScreen.render(batch);
-        player.draw(batch);
+        currentScreen.render(batch);
+        //player.draw(batch);
+        //mainMenuScreen.render(batch);
         batch.end();
-
-        mainMenuScreen.render();
 	}
 	
 	@Override
@@ -179,6 +180,13 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor {
                 }
             }
         }
+
+        if (currentScreen == airfieldScreen) {
+            currentScreen = mainMenuScreen;
+        } else {
+            currentScreen = airfieldScreen;
+        }
+
 
         return false;
     }

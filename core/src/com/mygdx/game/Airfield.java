@@ -1,13 +1,14 @@
 package com.mygdx.game;
 
 
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
-public class Airfield {
+public class Airfield extends Screen {
 
     boolean showArmors = false;
     boolean showGuns = false;
@@ -105,6 +106,7 @@ public class Airfield {
         enginesY *= scale;
     }
 
+    @Override
     public void render(SpriteBatch batch) {
 
         airfield.draw(batch);
