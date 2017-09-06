@@ -146,6 +146,7 @@ public class Airfield extends Screen {
         return false;
     }
 
+    @Override
     public void touchDown(Vector3 position) {
         System.out.println("touchdown vec3 position x: " + position.x + ", y: " + position.y);
         float oneThird = camera.viewportWidth / 3f;
@@ -168,5 +169,10 @@ public class Airfield extends Screen {
                 showBombs = !showBombs;
             }
         }
+
+        if (position.x < oneThird && position.y < oneThird) {
+            game.showScreen(TokyoRushGame.ScreenEnum.MAIN_MENU);
+        }
+
     }
 }

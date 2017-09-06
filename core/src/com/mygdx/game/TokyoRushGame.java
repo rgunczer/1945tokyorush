@@ -16,7 +16,14 @@ import java.util.ArrayList;
 
 
 public class TokyoRushGame extends ApplicationAdapter implements InputProcessor {
-	SpriteBatch batch;
+
+    public enum ScreenEnum {
+        MAIN_MENU,
+        AIRFIELD,
+        LEVEL
+    }
+
+    SpriteBatch batch;
 	Texture img;
 
     Texture playerHudFonts;
@@ -25,6 +32,8 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
     Airfield airfieldScreen;
     MainMenu mainMenuScreen;
     Screen currentScreen;
+
+
 
     final int SPAWN_DELTA = 1000;
     final int COLUMNS = 6;
@@ -37,9 +46,23 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
 
     float blockSize;
     float velocity;
-	
+
+    public void showScreen(ScreenEnum screen) {
+        switch (screen) {
+            case AIRFIELD:
+                currentScreen = airfieldScreen;
+                break;
+
+            case MAIN_MENU:
+                currentScreen = mainMenuScreen;
+                break;
+        }
+    }
+
 	@Override
 	public void create () {
+
+        Screen.game = this;
 
         airfieldScreen = new Airfield();
 
@@ -73,7 +96,7 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
         player.setX((camera.viewportWidth / 2f) - player.getWidth() / 2f);
         player.setY(100f * scale);
 
-        currentScreen = airfieldScreen;
+        currentScreen = mainMenuScreen;
 	}
 
 	@Override
@@ -167,26 +190,19 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
 
         Vector3 position = camera.unproject(new Vector3(screenX, screenY, 0));
 
-        airfieldScreen.touchDown(position);
+        currentScreen.touchDown(position);
 
-        // loop through all sprites
-        for(int column = 0; column < blocks.length; ++column) {
-            for(int i = 0; i < blocks[column].size(); ++i) {
-                Sprite block = blocks[column].get(i);
-
-                if (block.getBoundingRectangle().contains(position.x, position.y)) {
-                    block.rotate90(true);
-                    return true;
-                }
-            }
-        }
-
-        if (currentScreen == airfieldScreen) {
-            currentScreen = mainMenuScreen;
-        } else {
-            currentScreen = airfieldScreen;
-        }
-
+//        // loop through all sprites
+//        for(int column = 0; column < blocks.length; ++column) {
+//            for(int i = 0; i < blocks[column].size(); ++i) {
+//                Sprite block = blocks[column].get(i);
+//
+//                if (block.getBoundingRectangle().contains(position.x, position.y)) {
+//                    block.rotate90(true);
+//                    return true;
+//                }
+//            }
+//        }
 
         return false;
     }
