@@ -5,14 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
-
-import java.util.ArrayList;
 
 
 public class TokyoRushGame extends ApplicationAdapter implements InputProcessor {
@@ -23,31 +17,22 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
         LEVEL
     }
 
-    SpriteBatch batch;
-	Texture img;
-
-    Texture playerHudFonts;
-    Sprite player;
-
-    Airfield airfieldScreen;
-    MainMenu mainMenuScreen;
-    Screen currentScreen;
+    private long lastTime;
 
 
+    public static float referenceWidth = 640f;
+    public static float referenceHeight = 1440f;
 
-    final int SPAWN_DELTA = 1000;
-    final int COLUMNS = 6;
+    public static AirfieldScreen airfieldScreen;
+    public static MainMenuScreen mainMenuScreen;
+    public static Screen currentScreen;
 
-    ArrayList<Sprite>[] blocks = new ArrayList[COLUMNS];
+    public static Player player;
+    public static OrthographicCamera camera;
+    public static float scale;
+    public static TokyoRushGame instance;
 
-    long lastSpawn = 0;
-
-    OrthographicCamera camera;
-
-    float blockSize;
-    float velocity;
-
-    public void showScreen(ScreenEnum screen) {
+    public static void showScreen(ScreenEnum screen) {
         switch (screen) {
             case AIRFIELD:
                 currentScreen = airfieldScreen;
@@ -56,45 +41,32 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
             case MAIN_MENU:
                 currentScreen = mainMenuScreen;
                 break;
+
+            case LEVEL:
+
+                break;
         }
     }
 
 	@Override
 	public void create () {
+        Gdx.input.setInputProcessor(this);
 
-        Screen.game = this;
+        instance = this;
 
-        airfieldScreen = new Airfield();
-
-        mainMenuScreen = new MainMenu();
-
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
-        playerHudFonts = new Texture("player_hud_fonts_clouds.png");
-
-        player = new Sprite(playerHudFonts, 74, 222, 74, 54);
+        airfieldScreen = new AirfieldScreen();
+        mainMenuScreen = new MainMenuScreen();
+        player = new Player();
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false);
+        scale = camera.viewportWidth / 640f;
 
-        for(int i = 0; i < blocks.length; ++i) {
-            blocks[i] = new ArrayList<Sprite>();
-        }
+        airfieldScreen.create();
+        mainMenuScreen.create();
+        player.create();
 
-        blockSize = camera.viewportWidth / COLUMNS;
-        velocity = camera.viewportHeight / 200;
-
-        Gdx.input.setInputProcessor(this);
-
-        airfieldScreen.create(camera);
-        mainMenuScreen.create(camera);
-
-        float scale = camera.viewportWidth / 640f;
-
-        player.setOriginCenter();
-        player.setScale(scale * 1.5f);
-        player.setX((camera.viewportWidth / 2f) - player.getWidth() / 2f);
-        player.setY(100f * scale);
+        lastTime = TimeUtils.millis();
 
         currentScreen = mainMenuScreen;
 	}
@@ -106,35 +78,23 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
 		Gdx.gl.glClearColor(0, 0, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        batch.setProjectionMatrix(camera.combined);
-
-        batch.begin();
-
-        for(int column = 0; column < blocks.length; ++column) {
-            for(int i = 0; i < blocks[column].size(); ++i) {
-                blocks[column].get(i).draw(batch);
-            }
-        }
-
-		float x = (Gdx.graphics.getWidth() / 2f) - (img.getWidth() / 2f);
-        float y = (Gdx.graphics.getHeight() / 2f) - (img.getHeight() / 2f);
-
-		//batch.draw(img, x, y);
-        currentScreen.render(batch);
-        //player.draw(batch);
-        //mainMenuScreen.render(batch);
-        batch.end();
+        currentScreen.render();
 	}
 	
 	@Override
 	public void dispose () {
-		batch.dispose();
-		img.dispose();
+		//batch.dispose();
 	}
 
 	private void update() {
-        long now = TimeUtils.millis();
+        //long elapsedTime = TimeUtils.timeSinceMillis(lastTime);
 
+        //System.out.println("elapsed time: " + elapsedTime);
+        float elapsedTime = 1f / 60f;
+        currentScreen.update(elapsedTime);
+        //lastTime = TimeUtils.millis();
+
+/*
         if (now - lastSpawn > SPAWN_DELTA) {
             lastSpawn = now;
             int column = MathUtils.random(0, COLUMNS - 1);
@@ -165,7 +125,7 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
                 }
             }
         }
-
+*/
     }
 
     @Override
@@ -185,25 +145,8 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        int y = (int)camera.viewportHeight - screenY;
-        System.out.println("screenX: " + screenX + ", screenY: " + y);
-
         Vector3 position = camera.unproject(new Vector3(screenX, screenY, 0));
-
         currentScreen.touchDown(position);
-
-//        // loop through all sprites
-//        for(int column = 0; column < blocks.length; ++column) {
-//            for(int i = 0; i < blocks[column].size(); ++i) {
-//                Sprite block = blocks[column].get(i);
-//
-//                if (block.getBoundingRectangle().contains(position.x, position.y)) {
-//                    block.rotate90(true);
-//                    return true;
-//                }
-//            }
-//        }
-
         return false;
     }
 

@@ -1,14 +1,20 @@
 package com.mygdx.game;
 
-
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.TimeUtils;
 
-public class Airfield extends Screen {
+
+public class AirfieldScreen extends Screen {
+
+    public enum AirfieldStateEnum {
+        IDLE,
+        PLAYER_TAKEOFF,
+    }
+
+    public AirfieldStateEnum state;
 
     boolean showArmors = false;
     boolean showGuns = false;
@@ -30,17 +36,16 @@ public class Airfield extends Screen {
     Sprite engine2;
     Sprite engine1;
 
-    OrthographicCamera camera;
-
     float gunsY;
     float armorsY;
     float enginesY;
     float bombsY;
 
 
-    public void create(OrthographicCamera camera) {
+    public void create() {
+        state = AirfieldStateEnum.IDLE;
         int sc = 2;
-        this.camera = camera;
+
         airfieldTexture = new Texture("airfield2.png");
 
         airfield = new Sprite(airfieldTexture, 250*sc, 0, 640, 1440);
@@ -61,6 +66,8 @@ public class Airfield extends Screen {
         engine2 = new Sprite(airfieldTexture, 0*sc,270*sc,70*sc,90*sc);
         engine1 = new Sprite(airfieldTexture, 70*sc,270*sc,70*sc,90*sc);
 
+
+        OrthographicCamera camera = TokyoRushGame.camera;
 
         float scale = camera.viewportWidth / airfield.getWidth();
         float w = airfield.getWidth() * scale;
@@ -107,7 +114,8 @@ public class Airfield extends Screen {
     }
 
     @Override
-    public void render(SpriteBatch batch) {
+    public void render() {
+        beginRender();
 
         airfield.draw(batch);
 
@@ -134,10 +142,28 @@ public class Airfield extends Screen {
             engine2.draw(batch);
             engine3.draw(batch);
         }
+
+        TokyoRushGame.player.render(batch);
+
+        endRender();
+    }
+
+    @Override
+    public void update(float delta) {
+
+        switch (state) {
+            case IDLE:
+                break;
+
+            case PLAYER_TAKEOFF:
+                break;
+        }
+
+        TokyoRushGame.player.update(delta);
     }
 
     private boolean isInsideY(Vector3 position, float y) {
-        float oneThird = camera.viewportWidth / 3f;
+        float oneThird = TokyoRushGame.camera.viewportWidth / 3f;
         float upperY = y + oneThird;
         float lowerY = y;
         if ((position.y > lowerY) && (position.y < upperY)) {
@@ -149,6 +175,23 @@ public class Airfield extends Screen {
     @Override
     public void touchDown(Vector3 position) {
         System.out.println("touchdown vec3 position x: " + position.x + ", y: " + position.y);
+
+        switch (state) {
+            case IDLE:
+                touchDownInIdle(position);
+                break;
+
+            case PLAYER_TAKEOFF:
+                TokyoRushGame.player.setOnAirfield();
+                TokyoRushGame.player.state = Player.PlayerStateEnum.IDLE_ON_AIRFIELD;
+                state = AirfieldStateEnum.IDLE;
+                break;
+        }
+    }
+
+    private void touchDownInIdle(Vector3 position) {
+        OrthographicCamera camera = TokyoRushGame.camera;
+
         float oneThird = camera.viewportWidth / 3f;
         if (position.x > (oneThird * 2f) && position.x < camera.viewportWidth) {
             if (isInsideY(position, armorsY)) {
@@ -171,8 +214,14 @@ public class Airfield extends Screen {
         }
 
         if (position.x < oneThird && position.y < oneThird) {
-            game.showScreen(TokyoRushGame.ScreenEnum.MAIN_MENU);
+            TokyoRushGame.showScreen(TokyoRushGame.ScreenEnum.MAIN_MENU);
         }
 
+        if (position.x > oneThird * 2 && position.y < oneThird) {
+            TokyoRushGame.player.setOnAirfield();
+            showArmors = showBombs = showEngines = showGuns = false;
+            state = AirfieldStateEnum.PLAYER_TAKEOFF;
+            TokyoRushGame.player.state = Player.PlayerStateEnum.TAKEOFF;
+        }
     }
 }

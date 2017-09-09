@@ -6,12 +6,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class MenuItem {
 
-    Texture texture;
+    private Texture texture;
     public Sprite sprite;
+    MainMenuScreen.MenuAction action;
 
-    public MenuItem(String textureName) {
+    public MenuItem(String textureName, MainMenuScreen.MenuAction action) {
         texture = new Texture(textureName);
         sprite = new Sprite(texture);
+        this.action = action;
     }
 
     public void setBounds(float x, float y, float w, float h) {

@@ -5,8 +5,18 @@ import com.badlogic.gdx.math.Vector3;
 
 public abstract class Screen {
 
-    public static TokyoRushGame game;
+    SpriteBatch batch = new SpriteBatch();
 
-    public abstract void render(SpriteBatch batch);
+    protected void beginRender() {
+        batch.setProjectionMatrix(TokyoRushGame.camera.combined);
+        batch.begin();
+    }
+
+    protected void endRender() {
+        batch.end();
+    }
+
+    public abstract void update(float delta);
+    public abstract void render();
     public abstract void touchDown(Vector3 position);
 }
