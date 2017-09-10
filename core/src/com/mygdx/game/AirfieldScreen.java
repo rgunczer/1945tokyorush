@@ -42,6 +42,7 @@ public class AirfieldScreen extends Screen {
     float bombsY;
 
 
+    @Override
     public void create() {
         state = AirfieldStateEnum.IDLE;
         int sc = 2;
@@ -114,6 +115,11 @@ public class AirfieldScreen extends Screen {
     }
 
     @Override
+    public void init() {
+        TokyoRushGame.player.setOnAirfield();
+    }
+
+    @Override
     public void render() {
         beginRender();
 
@@ -150,12 +156,16 @@ public class AirfieldScreen extends Screen {
 
     @Override
     public void update(float delta) {
+        OrthographicCamera camera = TokyoRushGame.camera;
 
         switch (state) {
             case IDLE:
                 break;
 
             case PLAYER_TAKEOFF:
+                if (TokyoRushGame.player.pos.y > camera.viewportHeight + (camera.viewportHeight / 4f)) {
+                    TokyoRushGame.showScreen(TokyoRushGame.ScreenEnum.LEVEL);
+                }
                 break;
         }
 

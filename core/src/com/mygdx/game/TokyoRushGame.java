@@ -6,7 +6,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.TimeUtils;
 
 
 public class TokyoRushGame extends ApplicationAdapter implements InputProcessor {
@@ -17,12 +16,10 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
         LEVEL
     }
 
-    private long lastTime;
-
-
     public static float referenceWidth = 640f;
     public static float referenceHeight = 1440f;
 
+    public static LevelScreen levelScreen;
     public static AirfieldScreen airfieldScreen;
     public static MainMenuScreen mainMenuScreen;
     public static Screen currentScreen;
@@ -43,39 +40,47 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
                 break;
 
             case LEVEL:
-
+                currentScreen = levelScreen;
                 break;
         }
+        currentScreen.init();
     }
 
 	@Override
 	public void create () {
-        Gdx.input.setInputProcessor(this);
-
         instance = this;
 
-        airfieldScreen = new AirfieldScreen();
-        mainMenuScreen = new MainMenuScreen();
-        player = new Player();
+        Gdx.input.setInputProcessor(this);
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false);
         scale = camera.viewportWidth / 640f;
 
+        // screens
+        airfieldScreen = new AirfieldScreen();
+        mainMenuScreen = new MainMenuScreen();
+        player = new Player();
+        levelScreen = new LevelScreen();
+
+        // create
         airfieldScreen.create();
         mainMenuScreen.create();
         player.create();
+        levelScreen.create();
 
-        lastTime = TimeUtils.millis();
+        // init
+        levelScreen.init();
 
         currentScreen = mainMenuScreen;
+        currentScreen = levelScreen;
 	}
 
 	@Override
 	public void render () {
         update();
 
-		Gdx.gl.glClearColor(0, 0, 1, 1);
+//		Gdx.gl.glClearColor(0, 0, 1, 1);
+        Gdx.gl.glClearColor(75f/255f, 94f/255f, 15f/255f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         currentScreen.render();
@@ -90,7 +95,7 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
         //long elapsedTime = TimeUtils.timeSinceMillis(lastTime);
 
         //System.out.println("elapsed time: " + elapsedTime);
-        float elapsedTime = 1f / 60f;
+        final float elapsedTime = 1f / 60f;
         currentScreen.update(elapsedTime);
         //lastTime = TimeUtils.millis();
 
@@ -145,7 +150,7 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Vector3 position = camera.unproject(new Vector3(screenX, screenY, 0));
+        Vector3 position = camera.unproject(new Vector3(screenX, screenY, 0)); // TODO: fix GC
         currentScreen.touchDown(position);
         return false;
     }

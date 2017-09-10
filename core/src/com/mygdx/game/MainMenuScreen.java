@@ -30,6 +30,7 @@ public class MainMenuScreen extends Screen {
     MenuGroup currentMenu;
 
 
+    @Override
     public void create() {
         backgroundTexture = new Texture("main_menu.png");
         background = new Sprite(backgroundTexture, 660, 0, 640, 1440);
@@ -72,6 +73,11 @@ public class MainMenuScreen extends Screen {
 
         currentMenu = mainMenu;
         //currentMenu = difficultyMenu;
+    }
+
+    @Override
+    public void init() {
+        currentMenu = mainMenu;
     }
 
     @Override

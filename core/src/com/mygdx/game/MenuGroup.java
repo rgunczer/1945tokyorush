@@ -10,13 +10,14 @@ public class MenuGroup {
 
     MenuTitle menuTitle;
     Array<MenuItem> menuItems;
+    float gapBetweenMenuItemsY = 0.12f;
 
     public MenuGroup() {
         menuItems = new Array<MenuItem>(12);
     }
 
     public void add(MenuItem menuItem) {
-        menuItems.add(menuItem);
+        menuItems.insert(0, menuItem);
         calcMenuItemPositions();
     }
 
@@ -36,23 +37,25 @@ public class MenuGroup {
     }
 
     private void calcMenuItemPositions() {
-        float x;
-        float y = 0.5f;
         OrthographicCamera camera = TokyoRushGame.camera;
+        float x = 0f;
+        float y = gapBetweenMenuItemsY * 0.5f;
         float scale = TokyoRushGame.scale;
         float w = TokyoRushGame.referenceWidth * scale;
         float h = TokyoRushGame.referenceHeight * scale;
 
         for(MenuItem menuItem: menuItems) {
-            menuItem.sprite.setBounds(0f, 0f, w, menuItem.sprite.getRegionHeight() * scale);
-            menuItem.sprite.setPosition(0f, camera.viewportHeight * y);
-            y -= 0.12f;
+            menuItem.sprite.setBounds(x, 0f, w, menuItem.sprite.getRegionHeight() * scale);
+            menuItem.sprite.setPosition(x, camera.viewportHeight * y);
+            y += gapBetweenMenuItemsY;
         }
 
     }
 
     public void update(float delta) {
-
+        for(MenuItem menuItem : menuItems) {
+            menuItem.update(delta);
+        }
     }
 
     public void render(SpriteBatch batch) {

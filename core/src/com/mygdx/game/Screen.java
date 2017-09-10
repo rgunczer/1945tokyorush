@@ -16,6 +16,8 @@ public abstract class Screen {
         batch.end();
     }
 
+    public abstract void create();
+    public abstract void init();
     public abstract void update(float delta);
     public abstract void render();
     public abstract void touchDown(Vector3 position);

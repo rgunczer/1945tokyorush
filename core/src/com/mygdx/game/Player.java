@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+
 public class Player {
 
     public enum PlayerStateEnum {
@@ -76,6 +77,14 @@ public class Player {
         takeOffSpeed = 400f;
     }
 
+    public void setOnLevel() {
+        state = PlayerStateEnum.FLYING;
+        OrthographicCamera camera = TokyoRushGame.camera;
+        pos.x = camera.viewportWidth / 2.0f;
+        pos.y = camera.viewportWidth / 3.0f;
+        setPos(pos.x, pos.y);
+    }
+
     public void update(float delta) {
         switch (state) {
             case TAKEOFF:
@@ -100,6 +109,11 @@ public class Player {
                 break;
 
             case TAKEOFF:
+                shadow.draw(batch);
+                normal.draw(batch);
+                break;
+
+            case FLYING:
                 shadow.draw(batch);
                 normal.draw(batch);
                 break;

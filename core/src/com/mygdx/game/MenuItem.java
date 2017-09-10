@@ -24,6 +24,10 @@ public class MenuItem {
         sprite.setPosition(x, y);
     }
 
+    public void update(float delta) {
+
+    }
+
     public void draw(SpriteBatch batch) {
         sprite.draw(batch);
     }
