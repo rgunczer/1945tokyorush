@@ -47,8 +47,6 @@ public class Plant {
 
     public void draw(SpriteBatch batch, Vector2 offset) {
         //rot += 0.1f;
-        //batch.draw(shadow, x + 10f, y - 10f, shadow.getRegionWidth(), shadow.getRegionHeight());
-        //batch.draw(body, x, y, body.getRegionWidth(), body.getRegionHeight());
 
 //        public void draw (TextureRegion region,
 //        float x, float y,
@@ -70,7 +68,6 @@ public class Plant {
 
         batch.draw(shadow, pos.x + offset.x + shadowDistance, pos.y + offset.y - shadowDistance, originX, originY, width, height, scaleX, scaleY, rotation);
         batch.draw(body, pos.x + offset.x, pos.y + offset.y, originX, originY, width, height, scaleX, scaleY, rotation);
-
     }
 
 }

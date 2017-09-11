@@ -21,4 +21,6 @@ public abstract class Screen {
     public abstract void update(float delta);
     public abstract void render();
     public abstract void touchDown(Vector3 position);
+    public abstract void touchMove(Vector3 position);
+
 }

@@ -137,4 +137,7 @@ public class MainMenuScreen extends Screen {
         }
     }
 
+    @Override
+    public void touchMove(Vector3 position) {}
+
 }

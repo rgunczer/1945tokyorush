@@ -162,6 +162,8 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        Vector3 position = camera.unproject(new Vector3(screenX, screenY, 0)); // TODO: fix GC
+        currentScreen.touchMove(position);
         return false;
     }
 

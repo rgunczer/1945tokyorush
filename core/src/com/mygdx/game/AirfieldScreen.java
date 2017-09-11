@@ -234,4 +234,9 @@ public class AirfieldScreen extends Screen {
             TokyoRushGame.player.state = Player.PlayerStateEnum.TAKEOFF;
         }
     }
+
+    @Override
+    public void touchMove(Vector3 position) {
+
+    }
 }

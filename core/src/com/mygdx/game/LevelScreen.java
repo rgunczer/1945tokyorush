@@ -49,7 +49,7 @@ public class LevelScreen extends Screen {
         float extraSpace = camera.viewportWidth / 4f;
 
         plant.pos.x = MathUtils.random(-extraSpace, camera.viewportWidth + extraSpace);
-        plant.pos.y += camera.viewportHeight + extraSpace;
+        plant.pos.y = camera.viewportHeight + extraSpace + MathUtils.random(-extraSpace * 0.5f, extraSpace * 0.5f);
 
         plant.rot = MathUtils.random(0f, 360f);
         plant.scale = MathUtils.random(0.6f, 1.0f);
@@ -73,28 +73,30 @@ public class LevelScreen extends Screen {
 
     @Override
     public void update(float delta) {
+        OrthographicCamera camera = TokyoRushGame.camera;
+
         terrain.update(scrollSpeedY);
 
         for(Plant plant: plants) {
             plant.update(scrollSpeedY);
+
+            if (plant.pos.y < -camera.viewportWidth / 3f) {
+                putPlantToRandomPosition(plant);
+            }
         }
+
+        TokyoRushGame.player.update(delta);
+
     }
 
     @Override
     public void render() {
         beginRender();
 
-
-        OrthographicCamera camera = TokyoRushGame.camera;
-
         terrain.draw(batch, offset);
 
         for(Plant plant: plants) {
             plant.draw(batch, offset);
-
-            if (plant.pos.y < -camera.viewportWidth / 3f) {
-                putPlantToRandomPosition(plant);
-            }
         }
 
         TokyoRushGame.player.render(batch);
@@ -105,15 +107,17 @@ public class LevelScreen extends Screen {
     @Override
     public void touchDown(Vector3 position) {
         OrthographicCamera camera = TokyoRushGame.camera;
-        float halfScreenX = camera.viewportWidth / 2f;
-        if (position.x > halfScreenX) {
-            offset.x += 10f;
-        } else {
-            offset.x -= 10f;
-        }
 
-        if (position.y < camera.viewportHeight / 4f) {
+        TokyoRushGame.player.setTargetPosition(position.x, position.y);
+
+        if (position.y < camera.viewportWidth / 6f) {
             TokyoRushGame.showScreen(TokyoRushGame.ScreenEnum.MAIN_MENU);
         }
+    }
+
+    @Override
+    public void touchMove(Vector3 position) {
+        //System.out.println("touchMove: x:" + position.x + ", y:" + position.y);
+        TokyoRushGame.player.setTargetPosition(position.x, position.y);
     }
 }
