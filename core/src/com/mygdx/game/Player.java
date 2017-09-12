@@ -38,7 +38,7 @@ public class Player {
     Vector2 posTarget = new Vector2();
     Vector2 velocity = new Vector2();
 
-    float speed = 20f;
+    float speed;
 
     public float shadowDistance;
     public float scaleShadow;
@@ -97,6 +97,8 @@ public class Player {
         pos.y = camera.viewportWidth / 3.0f;
 
         posTarget.set(pos);
+
+        speed = 20.0f * TokyoRushGame.scale;
 
         scale = 1.0f;
         shadowDistance = 60f * TokyoRushGame.scale;

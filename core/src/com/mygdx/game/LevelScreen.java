@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g3d.utils.TextureProvider;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -9,13 +10,19 @@ import com.badlogic.gdx.utils.Array;
 
 public class LevelScreen extends Screen {
 
+    final int playerBulletCount = 120;
+
     Terrain terrain;
+
+    Array<Bullet> playerBullets;
 
     Array<Plant> plants;
 
     final int plantCount = 33;
 
     PlantFactory plantFactory;
+
+    int fireCounter;
 
     Vector2 offset;
     float scrollSpeedY;
@@ -26,6 +33,14 @@ public class LevelScreen extends Screen {
 
         terrain = new Terrain();
         terrain.init();
+
+        Bullet.create();
+
+        playerBullets = new Array<Bullet>(playerBulletCount);
+
+        for(int i = 0; i < playerBulletCount; ++i) {
+            playerBullets.add(new Bullet());
+        }
 
         plantFactory = new PlantFactory();
         plantFactory.create();
@@ -39,6 +54,8 @@ public class LevelScreen extends Screen {
     public void init() {
         offset.set(0f, 0f);
         scrollSpeedY = -3.5f;
+
+        fireCounter = 0;
 
         TokyoRushGame.player.setOnLevel();
     }
@@ -85,8 +102,59 @@ public class LevelScreen extends Screen {
             }
         }
 
+        for(Bullet bullet: playerBullets) {
+            if (bullet.live) {
+                bullet.update(delta);
+            }
+        }
+
         TokyoRushGame.player.update(delta);
 
+        ++fireCounter;
+
+        if (fireCounter >= 10) {
+            playerFire();
+            fireCounter = 0;
+        }
+    }
+
+    private Bullet getFirstAvailableBullet() {
+        Bullet bullet;
+        for(int i = 0; i < playerBulletCount; ++i) {
+            bullet = playerBullets.get(i);
+            if (!bullet.live) {
+                return bullet;
+            }
+        }
+        return null;
+    }
+
+    private Vector2 getPlayerCenterPosition() {
+        Vector2 pos = new Vector2(TokyoRushGame.player.pos);
+        float width = TokyoRushGame.player.normal.getRegionWidth() * TokyoRushGame.scale;
+        float height = TokyoRushGame.player.normal.getRegionHeight() * TokyoRushGame.scale;
+
+        float originX = width * 0.5f;
+        float originY = height * 0.5f;
+
+        float x = pos.x - (width * 0.5f) + originX;
+        float y = pos.y - (height * 0.5f) + originY;
+        pos.set(x, y);
+
+        return pos;
+    }
+
+    private void playerFire() {
+        Vector2 playerPos = getPlayerCenterPosition();
+        Bullet bullet = getFirstAvailableBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet, playerPos.x + 10f * TokyoRushGame.scale, playerPos.y, 0f, 720f * TokyoRushGame.scale, 0f);
+
+            bullet = getFirstAvailableBullet();
+            if (bullet != null) {
+                bullet.set(Bullet.playerBullet, playerPos.x - 10f * TokyoRushGame.scale, playerPos.y, 0f, 720f * TokyoRushGame.scale, 0f);
+            }
+        }
     }
 
     @Override
@@ -98,6 +166,13 @@ public class LevelScreen extends Screen {
         for(Plant plant: plants) {
             plant.draw(batch, offset);
         }
+
+        for(Bullet bullet: playerBullets) {
+            if (bullet.live) {
+                bullet.draw(batch, offset);
+            }
+        }
+
 
         TokyoRushGame.player.render(batch);
 
