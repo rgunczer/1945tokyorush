@@ -17,10 +17,12 @@ public class LevelScreen extends Screen {
     Array<Bullet> playerBullets;
 
     Array<Plant> plants;
+    Array<Tank> tanks;
 
     final int plantCount = 33;
 
     PlantFactory plantFactory;
+    TankFactory tankFactory;
 
     int fireCounter;
 
@@ -44,6 +46,9 @@ public class LevelScreen extends Screen {
 
         plantFactory = new PlantFactory();
         plantFactory.create();
+
+        tankFactory = new TankFactory();
+        tankFactory.create();
 
         plants = new Array<Plant>(plantCount);
 
