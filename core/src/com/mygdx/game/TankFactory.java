@@ -24,7 +24,7 @@ public class TankFactory {
 
     public void create() {
         tanks = new Array<Tank>(MAX_TANK_TYPES);
-        texture = new Texture("tansks.png");
+        texture = new Texture("land_units.png");
 
         TextureRegion body;
         TextureRegion shadow;
@@ -32,8 +32,25 @@ public class TankFactory {
         TextureRegion damaged;
         TextureRegion track;
 
-        body = new TextureRegion(texture, 0, 0, 128, 128);
-        shadow = new TextureRegion(texture, 0, 128, 128, 128);
+        int sc = 2;
+
+//        "shadow"=(0,0,50,64)
+//
+//        "body"=(50,0,50,64)
+//        "body_hit"=(50,135,50,64)
+//
+//        "wreck"=(50,64,50,64)
+//        "wreck_shadow"=(0,66,50,64)
+//
+//        "turret"=(114,10,21,61)
+//        "turret_wreck"=(114,76,21,61)
+//        "turret_hit"=(114,149,21,61)
+//
+//        "track"=(50,214,50,28)
+
+
+        body = new TextureRegion(texture, 50*sc, 0, 50*sc, 64*sc);
+        shadow = new TextureRegion(texture, 0, 0, 50*sc, 64*sc);
         tanks.add(new Tank(Tank.TANK_TYPE_SMALL, body, shadow));
 
 

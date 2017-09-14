@@ -52,7 +52,7 @@ public class LevelScreen extends Screen {
 
         plants = new Array<Plant>(plantCount);
 
-        createRandomPlants();
+
     }
 
     @Override
@@ -63,6 +63,12 @@ public class LevelScreen extends Screen {
         fireCounter = 0;
 
         TokyoRushGame.player.setOnLevel();
+
+        for(Bullet bullet: playerBullets) {
+            bullet.live = false;
+        }
+
+        createRandomPlants();
     }
 
     private void putPlantToRandomPosition(Plant plant) {
