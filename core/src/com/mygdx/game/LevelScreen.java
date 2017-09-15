@@ -20,6 +20,7 @@ public class LevelScreen extends Screen {
     Array<Tank> tanks;
 
     final int plantCount = 33;
+    final int tankCount = 6;
 
     PlantFactory plantFactory;
     TankFactory tankFactory;
@@ -51,14 +52,14 @@ public class LevelScreen extends Screen {
         tankFactory.create();
 
         plants = new Array<Plant>(plantCount);
-
+        tanks = new Array<Tank>(tankCount);
 
     }
 
     @Override
     public void init() {
         offset.set(0f, 0f);
-        scrollSpeedY = -3.5f;
+        scrollSpeedY = -1.2f; //-3.5f;
 
         fireCounter = 0;
 
@@ -69,6 +70,7 @@ public class LevelScreen extends Screen {
         }
 
         createRandomPlants();
+        createRandomTanks();
     }
 
     private void putPlantToRandomPosition(Plant plant) {
@@ -99,6 +101,29 @@ public class LevelScreen extends Screen {
         }
     }
 
+    private Vector2 getRandomTankVelocity(float rot) {
+        Vector2 vel = new Vector2(0f, 10f);
+        vel.rotate( rot );
+
+        return vel;
+    }
+
+    private void createRandomTanks() {
+        OrthographicCamera camera = TokyoRushGame.camera;
+
+        Tank template;
+        Tank tank;
+        for (int i = 0; i < tankCount; ++i) {
+            template = tankFactory.get(Tank.TANK_TYPE_SMALL);
+            tank = new Tank(template);
+            tank.pos.x = MathUtils.random(-camera.viewportWidth / 4f, camera.viewportWidth);
+            tank.pos.y = MathUtils.random(0f, camera.viewportHeight);
+            tank.rot = MathUtils.random(0f, 360f);
+            tank.vel = getRandomTankVelocity(tank.rot);
+            tanks.add(tank);
+        }
+    }
+
     @Override
     public void update(float delta) {
         OrthographicCamera camera = TokyoRushGame.camera;
@@ -110,6 +135,15 @@ public class LevelScreen extends Screen {
 
             if (plant.pos.y < -camera.viewportWidth / 3f) {
                 putPlantToRandomPosition(plant);
+            }
+        }
+
+        for(Tank tank: tanks) {
+            tank.update(delta, scrollSpeedY);
+
+            if (tank.pos.y < -100f || tank.pos.x < -100f * TokyoRushGame.scale || tank.pos.x > camera.viewportWidth + 100 * TokyoRushGame.scale) {
+                tank.pos.x = MathUtils.random(-camera.viewportWidth / 4f, camera.viewportWidth);
+                tank.pos.y = MathUtils.random(camera.viewportHeight + 200f * TokyoRushGame.scale, camera.viewportHeight + 200f * TokyoRushGame.scale);
             }
         }
 
@@ -173,6 +207,10 @@ public class LevelScreen extends Screen {
         beginRender();
 
         terrain.draw(batch, offset);
+
+        for(Tank tank: tanks) {
+            tank.draw(batch, offset);
+        }
 
         for(Plant plant: plants) {
             plant.draw(batch, offset);

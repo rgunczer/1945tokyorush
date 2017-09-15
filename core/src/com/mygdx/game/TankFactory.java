@@ -3,9 +3,9 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
-import org.w3c.dom.Text;
 
 public class TankFactory {
 
@@ -23,6 +23,8 @@ public class TankFactory {
     Array<Tank> tanks;
 
     public void create() {
+        int sc = 2;
+
         tanks = new Array<Tank>(MAX_TANK_TYPES);
         texture = new Texture("land_units.png");
 
@@ -32,7 +34,14 @@ public class TankFactory {
         TextureRegion damaged;
         TextureRegion track;
 
-        int sc = 2;
+
+        TextureRegion turretNormal;
+        TextureRegion turretWreck;
+        TextureRegion turretHit;
+
+
+
+
 
 //        "shadow"=(0,0,50,64)
 //
@@ -48,10 +57,24 @@ public class TankFactory {
 //
 //        "track"=(50,214,50,28)
 
+        Tank tank;
+        Turret turret;
 
+        float scale = 0.6f;
         body = new TextureRegion(texture, 50*sc, 0, 50*sc, 64*sc);
         shadow = new TextureRegion(texture, 0, 0, 50*sc, 64*sc);
-        tanks.add(new Tank(Tank.TANK_TYPE_SMALL, body, shadow));
+        tank = new Tank(Tank.TANK_TYPE_SMALL, body, shadow, scale);
+
+
+        turretNormal = new TextureRegion(texture, 114*sc, 10*sc, 21*sc, 61*sc);
+        turretWreck = new TextureRegion(texture, 114*sc, 76*sc, 21*sc, 61*sc);
+        turretHit = new TextureRegion(texture, 114*sc, 149*sc, 21*sc, 61*sc);
+
+        turret = new Turret(new Vector2(1f, 1f), turretNormal, turretHit);
+        turret.scale = scale;
+        tank.turret = turret;
+        tanks.add(tank);
+
 
 
     }
