@@ -7,27 +7,36 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Turret {
 
+    public static int TURRET_TANK_SMALL = 0;
+    public static int TURRET_TANK_BIG = 1;
+
     TextureRegion body;
-    TextureRegion hit;
     float scale;
     float rot;
     Vector2 offsetParent;
+    TurretTemplate template;
 
-    public Turret(Vector2 offsetParent, TextureRegion body, TextureRegion hit) {
-        this.offsetParent = offsetParent;
-        this.body = body;
-        this.hit = hit;
+    public Turret(TurretTemplate template) {
+        this.template = template;
+        this.offsetParent = template.parentOffset;
+        this.body = template.turretNormal;
+        this.scale = template.scale;
     }
 
-    public Turret(Turret other) {
-        this.offsetParent = other.offsetParent;
-        this.body = other.body;
-        this.hit = other.hit;
-        this.scale = other.scale;
+    public void showHit() {
+        this.body = template.turretHit;
+    }
+
+    public void showNormal() {
+        this.body = template.turretNormal;
+    }
+
+    public void showWreck() {
+        this.body = template.turretWreck;
     }
 
     public void update(float delta, float scrollY) {
-        rot-=0.1f;
+        rot-=0.3f;
     }
 
     public void draw(SpriteBatch batch, Vector2 parentPos, Vector2 offset) {

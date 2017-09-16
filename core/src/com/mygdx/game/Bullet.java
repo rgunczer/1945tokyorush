@@ -19,7 +19,7 @@ public class Bullet {
 
     Vector2 pos;
     Vector2 vel;
-
+    int hitPoint;
     float rot;
     TextureRegion current;
 
@@ -44,6 +44,7 @@ public class Bullet {
         pos.set(x, y);
         vel.set(vx, vy);
         this.rot = rot;
+        this.hitPoint = 2;
     }
 
     public void update(float delta) {

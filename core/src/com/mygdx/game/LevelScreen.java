@@ -1,8 +1,11 @@
 package com.mygdx.game;
 
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g3d.utils.TextureProvider;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -10,6 +13,9 @@ import com.badlogic.gdx.utils.Array;
 
 public class LevelScreen extends Screen {
 
+    ShapeRenderer shapeRenderer = new ShapeRenderer();
+
+    float playerBulletRadius;
     final int playerBulletCount = 120;
 
     Terrain terrain;
@@ -58,6 +64,8 @@ public class LevelScreen extends Screen {
 
     @Override
     public void init() {
+        playerBulletRadius = 10f * TokyoRushGame.scale;
+
         offset.set(0f, 0f);
         scrollSpeedY = -1.2f; //-3.5f;
 
@@ -101,25 +109,15 @@ public class LevelScreen extends Screen {
         }
     }
 
-    private Vector2 getRandomTankVelocity(float rot) {
-        Vector2 vel = new Vector2(0f, 10f);
-        vel.rotate( rot );
-
-        return vel;
-    }
-
     private void createRandomTanks() {
         OrthographicCamera camera = TokyoRushGame.camera;
 
-        Tank template;
         Tank tank;
         for (int i = 0; i < tankCount; ++i) {
-            template = tankFactory.get(Tank.TANK_TYPE_SMALL);
-            tank = new Tank(template);
+            tank = tankFactory.get(Tank.TANK_TYPE_SMALL);
             tank.pos.x = MathUtils.random(-camera.viewportWidth / 4f, camera.viewportWidth);
             tank.pos.y = MathUtils.random(0f, camera.viewportHeight);
-            tank.rot = MathUtils.random(0f, 360f);
-            tank.vel = getRandomTankVelocity(tank.rot);
+            tank.init();
             tanks.add(tank);
         }
     }
@@ -127,6 +125,8 @@ public class LevelScreen extends Screen {
     @Override
     public void update(float delta) {
         OrthographicCamera camera = TokyoRushGame.camera;
+
+        checkCollision();
 
         terrain.update(scrollSpeedY);
 
@@ -144,6 +144,7 @@ public class LevelScreen extends Screen {
             if (tank.pos.y < -100f || tank.pos.x < -100f * TokyoRushGame.scale || tank.pos.x > camera.viewportWidth + 100 * TokyoRushGame.scale) {
                 tank.pos.x = MathUtils.random(-camera.viewportWidth / 4f, camera.viewportWidth);
                 tank.pos.y = MathUtils.random(camera.viewportHeight + 200f * TokyoRushGame.scale, camera.viewportHeight + 200f * TokyoRushGame.scale);
+                tank.init();
             }
         }
 
@@ -155,12 +156,7 @@ public class LevelScreen extends Screen {
 
         TokyoRushGame.player.update(delta);
 
-        ++fireCounter;
-
-        if (fireCounter >= 10) {
-            playerFire();
-            fireCounter = 0;
-        }
+        playerFire();
     }
 
     private Bullet getFirstAvailableBullet() {
@@ -190,14 +186,39 @@ public class LevelScreen extends Screen {
     }
 
     private void playerFire() {
-        Vector2 playerPos = getPlayerCenterPosition();
-        Bullet bullet = getFirstAvailableBullet();
-        if (bullet != null) {
-            bullet.set(Bullet.playerBullet, playerPos.x + 10f * TokyoRushGame.scale, playerPos.y, 0f, 720f * TokyoRushGame.scale, 0f);
-
-            bullet = getFirstAvailableBullet();
+//        if (++fireCounter > 60) {
+        if (++fireCounter > 10) {
+            final float bulletSpeed = 730f * TokyoRushGame.scale;
+            //final float bulletSpeed = 130f * TokyoRushGame.scale;
+            Vector2 playerPos = getPlayerCenterPosition();
+            Bullet bullet = getFirstAvailableBullet();
             if (bullet != null) {
-                bullet.set(Bullet.playerBullet, playerPos.x - 10f * TokyoRushGame.scale, playerPos.y, 0f, 720f * TokyoRushGame.scale, 0f);
+                bullet.set(Bullet.playerBullet, playerPos.x + 10f * TokyoRushGame.scale, playerPos.y, 0f, bulletSpeed, 0f);
+
+                bullet = getFirstAvailableBullet();
+                if (bullet != null) {
+                    bullet.set(Bullet.playerBullet, playerPos.x - 10f * TokyoRushGame.scale, playerPos.y, 0f, bulletSpeed, 0f);
+                }
+            }
+            fireCounter = 0;
+        }
+    }
+
+    private void checkCollision() {
+        Circle playerBulletCircle = new Circle();
+        playerBulletCircle.radius = playerBulletRadius;
+
+        for(Bullet bullet: playerBullets) {
+            if (bullet.live) {
+                playerBulletCircle.x = bullet.pos.x;
+                playerBulletCircle.y = bullet.pos.y;
+
+                for(Tank tank: tanks) {
+                    if (tank.checkCollision(playerBulletCircle)) {
+                        tank.damage(bullet.hitPoint);
+                        bullet.live = false;
+                    }
+                }
             }
         }
     }
@@ -208,15 +229,15 @@ public class LevelScreen extends Screen {
 
         terrain.draw(batch, offset);
 
-        for(Tank tank: tanks) {
+        for (Tank tank : tanks) {
             tank.draw(batch, offset);
         }
 
-        for(Plant plant: plants) {
+        for (Plant plant : plants) {
             plant.draw(batch, offset);
         }
 
-        for(Bullet bullet: playerBullets) {
+        for (Bullet bullet : playerBullets) {
             if (bullet.live) {
                 bullet.draw(batch, offset);
             }
@@ -226,6 +247,33 @@ public class LevelScreen extends Screen {
         TokyoRushGame.player.render(batch);
 
         endRender();
+
+        //drawTankBoundingCircles();
+        //drawBulletBoundingCircles();
+    }
+
+    private void drawBulletBoundingCircles() {
+        Circle boundingCircle = new Circle();
+        boundingCircle.radius = playerBulletRadius;
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.YELLOW);
+        for(Bullet bullet: playerBullets) {
+            if (bullet.live) {
+                boundingCircle.x = bullet.pos.x;
+                boundingCircle.y = bullet.pos.y;
+                shapeRenderer.circle(boundingCircle.x, boundingCircle.y, boundingCircle.radius);
+            }
+        }
+        shapeRenderer.end();
+    }
+
+    private void drawTankBoundingCircles() {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.WHITE);
+        for(Tank tank: tanks) {
+            shapeRenderer.circle(tank.boundingCircle.x, tank.boundingCircle.y, tank.boundingCircle.radius);
+        }
+        shapeRenderer.end();
     }
 
     @Override
@@ -234,7 +282,7 @@ public class LevelScreen extends Screen {
 
         TokyoRushGame.player.setTargetPosition(position.x, position.y);
 
-        if (position.y < camera.viewportWidth / 6f) {
+        if (position.y > camera.viewportHeight - 100 * TokyoRushGame.scale) {
             TokyoRushGame.showScreen(TokyoRushGame.ScreenEnum.MAIN_MENU);
         }
     }

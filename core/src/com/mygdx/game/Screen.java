@@ -14,6 +14,7 @@ public abstract class Screen {
 
     protected void endRender() {
         batch.end();
+        batch.flush();
     }
 
     public abstract void create();

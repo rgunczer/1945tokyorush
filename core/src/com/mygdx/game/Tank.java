@@ -1,9 +1,11 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+
 
 public class Tank {
 
@@ -25,6 +27,13 @@ public class Tank {
     Vector2 pos;
     Vector2 vel;
     float scale;
+    int hitPoint;
+
+    float hitCooldown;
+
+    TankTemplate template;
+
+    Circle boundingCircle;
 
     public TankState state;
 
@@ -32,29 +41,37 @@ public class Tank {
 
     public Turret turret;
 
-    public Tank(int type, TextureRegion body, TextureRegion shadow, float scale) {
-        this.type = type;
-        this.body = body;
-        this.shadow = shadow;
-        this.scale = scale;
-    }
-
-    public Tank(Tank other) {
-        this.type = other.type;
-        this.body = other.body;
-        this.shadow = other.shadow;
+    public Tank(TankTemplate template) {
+        this.template = template;
+        this.type = template.type;
+        this.body = template.bodyNormal;
+        this.shadow = template.bodyShadow;
         this.pos = new Vector2();
-        this.scale = other.scale;
-
-        this.turret = new Turret(other.turret);
+        this.scale = template.scale;
+        this.boundingCircle = new Circle(template.boundingCircle);
+        this.hitPoint = template.hitPoint;
     }
 
-    public void create() {
-        pos = new Vector2();
+    public void addTurret(Turret turret) {
+        this.turret = turret;
     }
 
     public void init() {
-        state = TankState.IDLE;
+        hitPoint = template.hitPoint;
+        //state = TankState.IDLE;
+        rot = MathUtils.random(0f, 360f);
+        vel = getRandomTankVelocity(rot);
+
+        body = template.bodyNormal;
+        shadow = template.bodyShadow;
+        turret.showNormal();
+    }
+
+    private Vector2 getRandomTankVelocity(float rot) {
+        Vector2 vel = new Vector2(0f, 10f);
+        vel.rotate( rot );
+
+        return vel;
     }
 
     public void update(float delta, float scrollY) {
@@ -63,8 +80,39 @@ public class Tank {
         pos.x += vel.x * delta;
         pos.y += vel.y * delta;
 
-        if (turret != null) {
+        if (turret != null && body == template.bodyNormal) {
             turret.update(delta, scrollY);
+        }
+
+        if (body == template.bodyHit) {
+            hitCooldown -= 0.1f;
+            if (hitCooldown < 0f) {
+                body = template.bodyNormal;
+                turret.showNormal();
+            }
+        }
+    }
+
+    public boolean checkCollision(Circle circle) {
+        if (body != template.bodyWreck) {
+            boolean hit = boundingCircle.overlaps(circle);
+            if (hit) {
+                body = template.bodyHit;
+                hitCooldown = 0.4f;
+                turret.showHit();
+            }
+            return hit;
+        }
+        return false;
+    }
+
+    public void damage(int hitPoint) {
+        this.hitPoint -= hitPoint;
+        if (this.hitPoint <= 0) {
+            this.vel.setZero();
+            turret.showWreck();
+            body = template.bodyWreck;
+            shadow = template.bodyWreckShadow;
         }
     }
 
@@ -87,6 +135,8 @@ public class Tank {
             turret.draw(batch, new Vector2(pos.x, pos.y), offset);
         }
 
+        boundingCircle.x = pos.x;
+        boundingCircle.y = pos.y;
     }
 
 }
