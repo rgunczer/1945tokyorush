@@ -106,14 +106,16 @@ public class Tank {
         return false;
     }
 
-    public void damage(int hitPoint) {
+    public boolean damage(int hitPoint) {
         this.hitPoint -= hitPoint;
         if (this.hitPoint <= 0) {
             this.vel.setZero();
             turret.showWreck();
             body = template.bodyWreck;
             shadow = template.bodyWreckShadow;
+            return true;
         }
+        return false;
     }
 
     public void draw(SpriteBatch batch, Vector2 offset) {

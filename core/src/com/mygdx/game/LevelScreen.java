@@ -3,7 +3,6 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g3d.utils.TextureProvider;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
@@ -24,9 +23,11 @@ public class LevelScreen extends Screen {
 
     Array<Plant> plants;
     Array<Tank> tanks;
+    Array<Explosion> explosions;
 
     final int plantCount = 33;
     final int tankCount = 6;
+    final int explosionCount = 33;
 
     PlantFactory plantFactory;
     TankFactory tankFactory;
@@ -59,7 +60,15 @@ public class LevelScreen extends Screen {
 
         plants = new Array<Plant>(plantCount);
         tanks = new Array<Tank>(tankCount);
+        explosions = new Array<Explosion>(explosionCount);
 
+        Explosion.create();
+        Explosion explosion;
+        Vector2 pos = new Vector2();
+        for(int i = 0; i < explosionCount; ++i) {
+            explosion = new Explosion();
+            explosion.init(pos);
+        }
     }
 
     @Override
@@ -77,8 +86,26 @@ public class LevelScreen extends Screen {
             bullet.live = false;
         }
 
+        for(Explosion explosion: explosions) {
+            explosion.live = false;
+        }
+
         createRandomPlants();
         createRandomTanks();
+        createRandomExplosions();
+    }
+
+    private void createRandomExplosions() {
+        Explosion explosion;
+        Vector2 pos = new Vector2();
+        for(int i = 0; i < explosionCount; ++i) {
+            explosion = new Explosion();
+            pos.x = MathUtils.random(0f, TokyoRushGame.camera.viewportWidth);
+            pos.y = MathUtils.random(0f, TokyoRushGame.camera.viewportHeight);
+            explosion.init(pos);
+            explosion.live = false;
+            explosions.add(explosion);
+        }
     }
 
     private void putPlantToRandomPosition(Plant plant) {
@@ -157,6 +184,19 @@ public class LevelScreen extends Screen {
         TokyoRushGame.player.update(delta);
 
         playerFire();
+
+        Vector2 pos = new Vector2();
+        for(Explosion explosion: explosions) {
+            if (explosion.live) {
+                explosion.update(delta, scrollSpeedY);
+            }
+
+            if (explosion.pos.y < 0f) {
+                pos.x = MathUtils.random(0f, camera.viewportWidth);
+                pos.y = camera.viewportHeight;
+                explosion.init(pos);
+            }
+        }
     }
 
     private Bullet getFirstAvailableBullet() {
@@ -204,6 +244,17 @@ public class LevelScreen extends Screen {
         }
     }
 
+    private Explosion getExplosion() {
+        Explosion explosion;
+        for(int i = 0; i < explosionCount; ++i) {
+            explosion = explosions.get(i);
+            if (!explosion.live) {
+                return explosion;
+            }
+        }
+        return null;
+    }
+
     private void checkCollision() {
         Circle playerBulletCircle = new Circle();
         playerBulletCircle.radius = playerBulletRadius;
@@ -215,7 +266,12 @@ public class LevelScreen extends Screen {
 
                 for(Tank tank: tanks) {
                     if (tank.checkCollision(playerBulletCircle)) {
-                        tank.damage(bullet.hitPoint);
+                        if (tank.damage(bullet.hitPoint)) {
+                            Explosion explosion = getExplosion();
+                            if (explosion != null) {
+                                explosion.init(tank.pos);
+                            }
+                        }
                         bullet.live = false;
                     }
                 }
@@ -243,6 +299,11 @@ public class LevelScreen extends Screen {
             }
         }
 
+        for(Explosion explosion: explosions) {
+            if (explosion.live) {
+                explosion.draw(batch, offset);
+            }
+        }
 
         TokyoRushGame.player.render(batch);
 
