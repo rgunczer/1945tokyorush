@@ -28,7 +28,7 @@ public class Player {
 
     float fingerOffsetY;
 
-    Animation propellerAnim;
+    Animation<TextureRegion> propellerAnim;
 
     Vector2 posTakeOff = new Vector2();
 
@@ -39,6 +39,8 @@ public class Player {
     Vector2 velocity = new Vector2();
 
     float speed;
+
+    float propAnimStartTime;
 
     public float shadowDistance;
     public float scaleShadow;
@@ -57,11 +59,12 @@ public class Player {
         normal = new TextureRegion(texture, 168, 0, 168, 168);
         shadow = new TextureRegion(texture, 336, 0, 168, 168);
 
-        TextureRegion prop0 = new TextureRegion(texture, 0, 168, 168, 84);
-        TextureRegion prop1 = new TextureRegion(texture, 168, 168, 168, 84);
-        TextureRegion prop2 = new TextureRegion(texture, 336, 168, 168, 84);
+        TextureRegion[] propFrames = new TextureRegion[3];
+        propFrames[0] = new TextureRegion(texture, 0, 168, 168, 168);
+        propFrames[1] = new TextureRegion(texture, 168, 168, 168, 168);
+        propFrames[2] = new TextureRegion(texture, 336, 168, 168, 168);
 
-        propellerAnim = new Animation(1f, prop0, prop1, prop2);
+        propellerAnim = new Animation<TextureRegion>(0.2f, propFrames);
         propellerAnim.setPlayMode(Animation.PlayMode.LOOP);
 
         OrthographicCamera camera = TokyoRushGame.camera;
@@ -81,6 +84,7 @@ public class Player {
     }
 
     public void setOnAirfield() {
+        propAnimStartTime = 0f;
         pos.set(posTakeOff);
 
         takeOffSpeed = 400f;
@@ -91,6 +95,7 @@ public class Player {
     }
 
     public void setOnLevel() {
+        propAnimStartTime = 0f;
         state = PlayerStateEnum.FLYING;
         OrthographicCamera camera = TokyoRushGame.camera;
         pos.x = camera.viewportWidth * 0.5f;
@@ -124,6 +129,7 @@ public class Player {
     }
 
     public void update(float delta) {
+        propAnimStartTime += 0.1f;
         switch (state) {
             case TAKEOFF:
                 pos.y += takeOffSpeed * delta;
@@ -170,8 +176,10 @@ public class Player {
         float x = pos.x - width * 0.5f;
         float y = pos.y - height * 0.5f;
 
-
         batch.draw(shadow, x + shadowDistance, y - shadowDistance, originX, originY, width, height, scaleShadow, scaleShadow, rotation);
         batch.draw(normal, x, y, originX, originY, width, height, scale, scale, rotation);
+
+        TextureRegion prop = propellerAnim.getKeyFrame(propAnimStartTime, true);
+        batch.draw(prop, x, y, originX, originY, width, height, scale, scale, rotation);
     }
 }

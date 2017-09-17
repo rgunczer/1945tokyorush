@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class LevelScreen extends Screen {
 
-    ShapeRenderer shapeRenderer = new ShapeRenderer();
+    private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     float playerBulletRadius;
     final int playerBulletCount = 120;
@@ -230,9 +230,8 @@ public class LevelScreen extends Screen {
         float originX = width * 0.5f;
         float originY = height * 0.5f;
 
-        float x = pos.x - (width * 0.5f) + originX;
-        float y = pos.y - (height * 0.5f) + originY;
-        pos.set(x, y);
+        pos.x = pos.x - (width * 0.5f) + originX;
+        pos.y = pos.y - (height * 0.5f) + originY;
 
         return pos;
     }
@@ -245,11 +244,30 @@ public class LevelScreen extends Screen {
             Vector2 playerPos = getPlayerCenterPosition();
             Bullet bullet = getFirstAvailableBullet();
             if (bullet != null) {
-                bullet.set(Bullet.playerBullet, playerPos.x + 10f * TokyoRushGame.scale, playerPos.y, 0f, bulletSpeed, 0f);
+                bullet.set(Bullet.playerBullet,
+                        playerPos.x,
+                        playerPos.y,
+                        bulletSpeed * 0.1f,
+                        bulletSpeed);
+
 
                 bullet = getFirstAvailableBullet();
                 if (bullet != null) {
-                    bullet.set(Bullet.playerBullet, playerPos.x - 10f * TokyoRushGame.scale, playerPos.y, 0f, bulletSpeed, 0f);
+                    bullet.set(Bullet.playerBullet,
+                            playerPos.x,
+                            playerPos.y,
+                            bulletSpeed * 0f,
+                            bulletSpeed * 1.01f);
+                }
+
+
+                bullet = getFirstAvailableBullet();
+                if (bullet != null) {
+                    bullet.set(Bullet.playerBullet,
+                            playerPos.x,
+                            playerPos.y,
+                            bulletSpeed * -0.1f,
+                            bulletSpeed);
                 }
             }
             fireCounter = 0;

@@ -38,12 +38,14 @@ public class Bullet {
         blueBullet = new TextureRegion(bulletTexture, 196, 0, 64, 64);
     }
 
-    public void set(TextureRegion type, float x, float y, float vx, float vy, float rot) {
+    public void set(TextureRegion type,
+                    float x, float y,
+                    float vx, float vy) {
         live = true;
         current = type;
         pos.set(x, y);
         vel.set(vx, vy);
-        this.rot = rot;
+        this.rot = vel.angle() + 90f;
         this.hitPoint = 2;
     }
 
