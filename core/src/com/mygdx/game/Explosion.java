@@ -41,7 +41,7 @@ public class Explosion {
 
     public void update(float delta, float scrollY) {
         pos.y += scrollY;
-        startTime+=0.1f;
+        startTime += 0.1f;
     }
 
     public void draw(SpriteBatch batch, Vector2 offset) {
@@ -49,21 +49,15 @@ public class Explosion {
         if (!finished) {
             TextureRegion currentFrame = anim.getKeyFrame(startTime, false);
 
-
-
             float w = currentFrame.getRegionWidth() * TokyoRushGame.scale;
             float h = currentFrame.getRegionHeight() * TokyoRushGame.scale;
             float originX = w * 0.5f;
             float originY = h * 0.5f;
-            float scaleX = scale;
-            float scaleY = scale;
-
-            //Vector2 pos = new Vector2(parentPos.x + offsetParent.x, parentPos.y + offsetParent.y);
 
             float x = pos.x - w * 0.5f;
             float y = pos.y - h * 0.5f;
 
-            batch.draw(currentFrame, x + offset.x, y + offset.y, originX, originY, w, h, scaleX, scaleY, rot);
+            batch.draw(currentFrame, x + offset.x, y + offset.y, originX, originY, w, h, scale, scale, rot);
         } else {
             live = false;
         }

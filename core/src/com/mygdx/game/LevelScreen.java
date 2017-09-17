@@ -37,6 +37,8 @@ public class LevelScreen extends Screen {
     Vector2 offset;
     float scrollSpeedY;
 
+    Clouds clouds;
+
     @Override
     public void create() {
         offset = new Vector2();
@@ -69,6 +71,9 @@ public class LevelScreen extends Screen {
             explosion = new Explosion();
             explosion.init(pos);
         }
+
+        Clouds.create();
+        clouds = new Clouds();
     }
 
     @Override
@@ -93,6 +98,11 @@ public class LevelScreen extends Screen {
         createRandomPlants();
         createRandomTanks();
         createRandomExplosions();
+        createRandomClouds();
+    }
+
+    private void createRandomClouds() {
+        clouds.init();
     }
 
     private void createRandomExplosions() {
@@ -197,6 +207,8 @@ public class LevelScreen extends Screen {
                 explosion.init(pos);
             }
         }
+
+        clouds.update(delta, scrollSpeedY*2f);
     }
 
     private Bullet getFirstAvailableBullet() {
@@ -306,6 +318,8 @@ public class LevelScreen extends Screen {
         }
 
         TokyoRushGame.player.render(batch);
+
+        clouds.draw(batch, offset);
 
         endRender();
 
