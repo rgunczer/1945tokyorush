@@ -17,6 +17,12 @@ public class Player {
         TAKEOFF,
     }
 
+    public enum GunTypeEnum {
+        DOUBLE_GUN,
+        TRIPLE_GUN,
+        QUAD_GUN
+    }
+
     Texture texture;
     TextureRegion hit;
     TextureRegion normal;
@@ -27,6 +33,8 @@ public class Player {
     float distanceToTarget;
 
     float fingerOffsetY;
+
+    public GunTypeEnum gunType;
 
     Animation<TextureRegion> propellerAnim;
 
@@ -81,6 +89,8 @@ public class Player {
 
         posTakeOff.x = pos.x;
         posTakeOff.y = pos.y;
+
+        gunType = GunTypeEnum.DOUBLE_GUN;
     }
 
     public void setOnAirfield() {

@@ -236,39 +236,116 @@ public class LevelScreen extends Screen {
         return pos;
     }
 
+    private void fireDoubleGun() {
+        final float bulletSpeed = 730f * TokyoRushGame.scale;
+        Vector2 playerPos = getPlayerCenterPosition();
+        Bullet bullet = getFirstAvailableBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x - 10f * TokyoRushGame.scale,
+                    playerPos.y,
+                    0f,
+                    bulletSpeed);
+        }
+
+        bullet = getFirstAvailableBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x + 10f * TokyoRushGame.scale,
+                    playerPos.y,
+                    0f,
+                    bulletSpeed);
+        }
+    }
+
+    private void fireTripleGun() {
+        final float bulletSpeed = 730f * TokyoRushGame.scale;
+        Vector2 playerPos = getPlayerCenterPosition();
+        Bullet bullet = getFirstAvailableBullet();
+
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x,
+                    playerPos.y,
+                    bulletSpeed * 0.1f,
+                    bulletSpeed);
+        }
+
+        bullet = getFirstAvailableBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x,
+                    playerPos.y,
+                    bulletSpeed * 0f,
+                    bulletSpeed * 1.01f);
+        }
+
+        bullet = getFirstAvailableBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x,
+                    playerPos.y,
+                    bulletSpeed * -0.1f,
+                    bulletSpeed);
+        }
+    }
+
+    private void fireQuadGun() {
+        final float bulletSpeed = 730f * TokyoRushGame.scale;
+        Vector2 playerPos = getPlayerCenterPosition();
+        Bullet bullet = getFirstAvailableBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x - 30f * TokyoRushGame.scale,
+                    playerPos.y,
+                    0f,
+                    bulletSpeed);
+        }
+
+        bullet = getFirstAvailableBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x - 10f * TokyoRushGame.scale,
+                    playerPos.y + 10f * TokyoRushGame.scale,
+                    0f,
+                    bulletSpeed);
+        }
+
+        bullet = getFirstAvailableBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x + 10f * TokyoRushGame.scale,
+                    playerPos.y + 10f * TokyoRushGame.scale,
+                    0f,
+                    bulletSpeed);
+        }
+
+        bullet = getFirstAvailableBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x + 30f * TokyoRushGame.scale,
+                    playerPos.y,
+                    0f,
+                    bulletSpeed);
+        }
+
+    }
+
     private void playerFire() {
 //        if (++fireCounter > 60) {
         if (++fireCounter > 10) {
-            final float bulletSpeed = 730f * TokyoRushGame.scale;
-            //final float bulletSpeed = 130f * TokyoRushGame.scale;
-            Vector2 playerPos = getPlayerCenterPosition();
-            Bullet bullet = getFirstAvailableBullet();
-            if (bullet != null) {
-                bullet.set(Bullet.playerBullet,
-                        playerPos.x,
-                        playerPos.y,
-                        bulletSpeed * 0.1f,
-                        bulletSpeed);
+            switch (TokyoRushGame.player.gunType) {
+                case DOUBLE_GUN:
+                    fireDoubleGun();
+                    break;
 
+                case TRIPLE_GUN:
+                    fireTripleGun();
+                    break;
 
-                bullet = getFirstAvailableBullet();
-                if (bullet != null) {
-                    bullet.set(Bullet.playerBullet,
-                            playerPos.x,
-                            playerPos.y,
-                            bulletSpeed * 0f,
-                            bulletSpeed * 1.01f);
-                }
-
-
-                bullet = getFirstAvailableBullet();
-                if (bullet != null) {
-                    bullet.set(Bullet.playerBullet,
-                            playerPos.x,
-                            playerPos.y,
-                            bulletSpeed * -0.1f,
-                            bulletSpeed);
-                }
+                case QUAD_GUN:
+                    fireQuadGun();
+                    break;
             }
             fireCounter = 0;
         }
@@ -376,7 +453,17 @@ public class LevelScreen extends Screen {
         TokyoRushGame.player.setTargetPosition(position.x, position.y);
 
         if (position.y > camera.viewportHeight - 100 * TokyoRushGame.scale) {
-            TokyoRushGame.showScreen(TokyoRushGame.ScreenEnum.MAIN_MENU);
+            if (position.x > TokyoRushGame.camera.viewportWidth / 2) {
+                TokyoRushGame.showScreen(TokyoRushGame.ScreenEnum.MAIN_MENU);
+            } else {
+                if (TokyoRushGame.player.gunType == Player.GunTypeEnum.DOUBLE_GUN) {
+                    TokyoRushGame.player.gunType = Player.GunTypeEnum.TRIPLE_GUN;
+                } else if (TokyoRushGame.player.gunType == Player.GunTypeEnum.TRIPLE_GUN) {
+                    TokyoRushGame.player.gunType = Player.GunTypeEnum.QUAD_GUN;
+                } else if (TokyoRushGame.player.gunType == Player.GunTypeEnum.QUAD_GUN) {
+                    TokyoRushGame.player.gunType = Player.GunTypeEnum.DOUBLE_GUN;
+                }
+            }
         }
     }
 
