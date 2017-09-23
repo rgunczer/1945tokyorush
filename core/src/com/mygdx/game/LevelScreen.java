@@ -17,9 +17,12 @@ public class LevelScreen extends Screen {
     float playerBulletRadius;
     final int playerBulletCount = 120;
 
+    final int enemyBulletCount = 120;
+
     Terrain terrain;
 
     Array<Bullet> playerBullets;
+    Array<Bullet> enemyBullets;
 
     Array<Plant> plants;
     Array<Tank> tanks;
@@ -49,9 +52,13 @@ public class LevelScreen extends Screen {
         Bullet.create();
 
         playerBullets = new Array<Bullet>(playerBulletCount);
-
         for(int i = 0; i < playerBulletCount; ++i) {
             playerBullets.add(new Bullet());
+        }
+
+        enemyBullets = new Array<Bullet>(enemyBulletCount);
+        for (int i = 0; i < enemyBulletCount; ++i) {
+            enemyBullets.add(new Bullet());
         }
 
         plantFactory = new PlantFactory();
