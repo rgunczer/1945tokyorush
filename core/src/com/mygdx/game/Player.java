@@ -28,6 +28,8 @@ public class Player {
     TextureRegion normal;
     TextureRegion shadow;
 
+    float bulletSpeed;
+
     float takeOffSpeed = 100f; ///400f;
 
     float distanceToTarget;
@@ -49,6 +51,8 @@ public class Player {
     float speed;
 
     float propAnimStartTime;
+
+    int fireCounter;
 
     public float shadowDistance;
     public float scaleShadow;
@@ -91,6 +95,8 @@ public class Player {
         posTakeOff.y = pos.y;
 
         gunType = GunTypeEnum.DOUBLE_GUN;
+
+        bulletSpeed = 730f * TokyoRushGame.scale;
     }
 
     public void setOnAirfield() {
@@ -105,6 +111,7 @@ public class Player {
     }
 
     public void setOnLevel() {
+        fireCounter = 0;
         propAnimStartTime = 0f;
         state = PlayerStateEnum.FLYING;
         OrthographicCamera camera = TokyoRushGame.camera;
@@ -138,6 +145,20 @@ public class Player {
         }
     }
 
+    public Vector2 getCenterPosition() {
+        Vector2 p = new Vector2(pos);
+        float width = normal.getRegionWidth() * TokyoRushGame.scale;
+        float height = normal.getRegionHeight() * TokyoRushGame.scale;
+
+        float originX = width * 0.5f;
+        float originY = height * 0.5f;
+
+        p.x = p.x - (width * 0.5f) + originX;
+        p.y = p.y - (height * 0.5f) + originY;
+
+        return p;
+    }
+
     public void update(float delta) {
         propAnimStartTime += 0.1f;
         switch (state) {
@@ -154,15 +175,129 @@ public class Player {
 
             case FLYING: {
                 float distance = posTarget.dst(pos);
-                System.out.println("distance: " + distance);
+                //System.out.println("distance: " + distance);
                 if (distance < distanceToTarget) {
                     float x = velocity.x * speed * delta;
                     float y = velocity.y * speed * delta;
                     pos.add(x, y);
                     distanceToTarget = distance;
                 }
+                fire();
             }
             break;
+        }
+    }
+
+    private Bullet getFreeBullet() {
+        return TokyoRushGame.levelScreen.getFirstAvailableBullet();
+    }
+
+    public void fire() {
+        if (++fireCounter > 10) {
+            switch (gunType) {
+                case DOUBLE_GUN:
+                    fireDoubleGun();
+                    break;
+
+                case TRIPLE_GUN:
+                    fireTripleGun();
+                    break;
+
+                case QUAD_GUN:
+                    fireQuadGun();
+                    break;
+            }
+            fireCounter = 0;
+        }
+    }
+
+    private void fireDoubleGun() {
+        Vector2 playerPos = getCenterPosition();
+        Bullet bullet = getFreeBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x - 10f * TokyoRushGame.scale,
+                    playerPos.y,
+                    0f,
+                    bulletSpeed);
+        }
+
+        bullet = TokyoRushGame.levelScreen.getFirstAvailableBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x + 10f * TokyoRushGame.scale,
+                    playerPos.y,
+                    0f,
+                    bulletSpeed);
+        }
+    }
+
+    private void fireTripleGun() {
+        Vector2 playerPos = getCenterPosition();
+        Bullet bullet = getFreeBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x,
+                    playerPos.y,
+                    bulletSpeed * 0.1f,
+                    bulletSpeed);
+        }
+
+        bullet = getFreeBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x,
+                    playerPos.y,
+                    bulletSpeed * 0f,
+                    bulletSpeed * 1.01f);
+        }
+
+        bullet = getFreeBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x,
+                    playerPos.y,
+                    bulletSpeed * -0.1f,
+                    bulletSpeed);
+        }
+    }
+
+    private void fireQuadGun() {
+        Vector2 playerPos = getCenterPosition();
+        Bullet bullet = getFreeBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x - 30f * TokyoRushGame.scale,
+                    playerPos.y,
+                    0f,
+                    bulletSpeed);
+        }
+
+        bullet = getFreeBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x - 10f * TokyoRushGame.scale,
+                    playerPos.y + 10f * TokyoRushGame.scale,
+                    0f,
+                    bulletSpeed);
+        }
+
+        bullet = getFreeBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x + 10f * TokyoRushGame.scale,
+                    playerPos.y + 10f * TokyoRushGame.scale,
+                    0f,
+                    bulletSpeed);
+        }
+
+        bullet = getFreeBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.playerBullet,
+                    playerPos.x + 30f * TokyoRushGame.scale,
+                    playerPos.y,
+                    0f,
+                    bulletSpeed);
         }
     }
 

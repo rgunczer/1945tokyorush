@@ -65,6 +65,7 @@ public class Tank {
         body = template.bodyNormal;
         shadow = template.bodyShadow;
         turret.showNormal();
+        turret.rot = rot;
     }
 
     private Vector2 getRandomTankVelocity(float rot) {
@@ -80,9 +81,7 @@ public class Tank {
         pos.x += vel.x * delta;
         pos.y += vel.y * delta;
 
-        if (turret != null && body == template.bodyNormal) {
-            turret.update(delta, scrollY);
-        }
+        turret.update(delta, pos);
 
         if (body == template.bodyHit) {
             hitCooldown -= 0.1f;
@@ -133,9 +132,8 @@ public class Tank {
         batch.draw(shadow, x + offset.x + shadowOffset, y + offset.y - shadowOffset, originX, originY, w, h, scaleX, scaleY, rot);
         batch.draw(body, x + offset.x, y + offset.y, originX, originY, w, h, scaleX, scaleY, rot);
 
-        if (turret != null) {
-            turret.draw(batch, new Vector2(pos.x, pos.y), offset);
-        }
+        //turret.draw(batch, new Vector2(pos.x, pos.y), offset);
+        turret.draw(batch, offset);
 
         boundingCircle.x = pos.x;
         boundingCircle.y = pos.y;

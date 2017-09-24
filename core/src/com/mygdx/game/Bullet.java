@@ -49,7 +49,9 @@ public class Bullet {
         this.hitPoint = 2;
     }
 
-    public void update(float delta) {
+    public void update(float delta, float scrollY) {
+        pos.y += scrollY;
+
         pos.x += vel.x * delta;
         pos.y += vel.y * delta;
 

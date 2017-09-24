@@ -35,8 +35,6 @@ public class LevelScreen extends Screen {
     PlantFactory plantFactory;
     TankFactory tankFactory;
 
-    int fireCounter;
-
     Vector2 offset;
     float scrollSpeedY;
 
@@ -89,8 +87,6 @@ public class LevelScreen extends Screen {
 
         offset.set(0f, 0f);
         scrollSpeedY = -1.2f; //-3.5f;
-
-        fireCounter = 0;
 
         TokyoRushGame.player.setOnLevel();
 
@@ -166,6 +162,17 @@ public class LevelScreen extends Screen {
         }
     }
 
+    public void fireEnemy(Vector2 pos, Vector2 vel) {
+        Bullet bullet = getFirstAvailableEnemyBullet();
+        if (bullet != null) {
+            bullet.set(Bullet.redBullet,
+                    pos.x,
+                    pos.y,
+                    vel.x,
+                    vel.y);
+        }
+    }
+
     @Override
     public void update(float delta) {
         OrthographicCamera camera = TokyoRushGame.camera;
@@ -194,13 +201,17 @@ public class LevelScreen extends Screen {
 
         for(Bullet bullet: playerBullets) {
             if (bullet.live) {
-                bullet.update(delta);
+                bullet.update(delta, scrollSpeedY);
+            }
+        }
+
+        for(Bullet bullet: enemyBullets) {
+            if (bullet.live) {
+                bullet.update(delta, scrollSpeedY);
             }
         }
 
         TokyoRushGame.player.update(delta);
-
-        playerFire();
 
         Vector2 pos = new Vector2();
         for(Explosion explosion: explosions) {
@@ -218,7 +229,7 @@ public class LevelScreen extends Screen {
         clouds.update(delta, scrollSpeedY*2f);
     }
 
-    private Bullet getFirstAvailableBullet() {
+    public Bullet getFirstAvailableBullet() {
         Bullet bullet;
         for(int i = 0; i < playerBulletCount; ++i) {
             bullet = playerBullets.get(i);
@@ -229,133 +240,15 @@ public class LevelScreen extends Screen {
         return null;
     }
 
-    private Vector2 getPlayerCenterPosition() {
-        Vector2 pos = new Vector2(TokyoRushGame.player.pos);
-        float width = TokyoRushGame.player.normal.getRegionWidth() * TokyoRushGame.scale;
-        float height = TokyoRushGame.player.normal.getRegionHeight() * TokyoRushGame.scale;
-
-        float originX = width * 0.5f;
-        float originY = height * 0.5f;
-
-        pos.x = pos.x - (width * 0.5f) + originX;
-        pos.y = pos.y - (height * 0.5f) + originY;
-
-        return pos;
-    }
-
-    private void fireDoubleGun() {
-        final float bulletSpeed = 730f * TokyoRushGame.scale;
-        Vector2 playerPos = getPlayerCenterPosition();
-        Bullet bullet = getFirstAvailableBullet();
-        if (bullet != null) {
-            bullet.set(Bullet.playerBullet,
-                    playerPos.x - 10f * TokyoRushGame.scale,
-                    playerPos.y,
-                    0f,
-                    bulletSpeed);
-        }
-
-        bullet = getFirstAvailableBullet();
-        if (bullet != null) {
-            bullet.set(Bullet.playerBullet,
-                    playerPos.x + 10f * TokyoRushGame.scale,
-                    playerPos.y,
-                    0f,
-                    bulletSpeed);
-        }
-    }
-
-    private void fireTripleGun() {
-        final float bulletSpeed = 730f * TokyoRushGame.scale;
-        Vector2 playerPos = getPlayerCenterPosition();
-        Bullet bullet = getFirstAvailableBullet();
-
-        if (bullet != null) {
-            bullet.set(Bullet.playerBullet,
-                    playerPos.x,
-                    playerPos.y,
-                    bulletSpeed * 0.1f,
-                    bulletSpeed);
-        }
-
-        bullet = getFirstAvailableBullet();
-        if (bullet != null) {
-            bullet.set(Bullet.playerBullet,
-                    playerPos.x,
-                    playerPos.y,
-                    bulletSpeed * 0f,
-                    bulletSpeed * 1.01f);
-        }
-
-        bullet = getFirstAvailableBullet();
-        if (bullet != null) {
-            bullet.set(Bullet.playerBullet,
-                    playerPos.x,
-                    playerPos.y,
-                    bulletSpeed * -0.1f,
-                    bulletSpeed);
-        }
-    }
-
-    private void fireQuadGun() {
-        final float bulletSpeed = 730f * TokyoRushGame.scale;
-        Vector2 playerPos = getPlayerCenterPosition();
-        Bullet bullet = getFirstAvailableBullet();
-        if (bullet != null) {
-            bullet.set(Bullet.playerBullet,
-                    playerPos.x - 30f * TokyoRushGame.scale,
-                    playerPos.y,
-                    0f,
-                    bulletSpeed);
-        }
-
-        bullet = getFirstAvailableBullet();
-        if (bullet != null) {
-            bullet.set(Bullet.playerBullet,
-                    playerPos.x - 10f * TokyoRushGame.scale,
-                    playerPos.y + 10f * TokyoRushGame.scale,
-                    0f,
-                    bulletSpeed);
-        }
-
-        bullet = getFirstAvailableBullet();
-        if (bullet != null) {
-            bullet.set(Bullet.playerBullet,
-                    playerPos.x + 10f * TokyoRushGame.scale,
-                    playerPos.y + 10f * TokyoRushGame.scale,
-                    0f,
-                    bulletSpeed);
-        }
-
-        bullet = getFirstAvailableBullet();
-        if (bullet != null) {
-            bullet.set(Bullet.playerBullet,
-                    playerPos.x + 30f * TokyoRushGame.scale,
-                    playerPos.y,
-                    0f,
-                    bulletSpeed);
-        }
-
-    }
-
-    private void playerFire() {
-//        if (++fireCounter > 60) {
-        if (++fireCounter > 10) {
-            switch (TokyoRushGame.player.gunType) {
-                case DOUBLE_GUN:
-                    fireDoubleGun();
-                    break;
-
-                case TRIPLE_GUN:
-                    fireTripleGun();
-                    break;
-
-                case QUAD_GUN:
-                    fireQuadGun();
-                    break;
+    public Bullet getFirstAvailableEnemyBullet() {
+        Bullet bullet;
+        for(int i = 0; i < enemyBulletCount; ++i) {
+            bullet = enemyBullets.get(i);
+            if (!bullet.live) {
+                return bullet;
             }
-            fireCounter = 0;
         }
+        return null;
     }
 
     private Explosion getExplosion() {
@@ -405,6 +298,12 @@ public class LevelScreen extends Screen {
 
         for (Plant plant : plants) {
             plant.draw(batch, offset);
+        }
+
+        for(Bullet bullet: enemyBullets) {
+            if (bullet.live) {
+                bullet.draw(batch, offset);
+            }
         }
 
         for (Bullet bullet : playerBullets) {
