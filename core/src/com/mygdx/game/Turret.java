@@ -11,6 +11,8 @@ public class Turret {
     public static int TURRET_TANK_SMALL = 0;
     public static int TURRET_TANK_BIG = 1;
 
+    boolean canFire;
+
     TextureRegion body;
     float scale;
     float rot;
@@ -39,6 +41,7 @@ public class Turret {
 
         pos = new Vector2();
         turretCooldown = 100;
+        canFire = false;
     }
 
     public void showHit() {
@@ -69,7 +72,7 @@ public class Turret {
 
     private void seekTarget(float delta) {
         --turretCooldown;
-        boolean canFire = false;
+        canFire = false;
         final float angularVelocity = 0.01f;
         Vector2 playerPos = TokyoRushGame.player.getCenterPosition();
         calcTurretPos();
@@ -80,10 +83,6 @@ public class Turret {
 
         float desiredAngle = MathUtils.atan2(playerPos.y - pos.y, playerPos.x - pos.x);
         float angleDiff = desiredAngle - angle;
-
-        if ( Math.abs(MathUtils.radiansToDegrees * angleDiff) < 1.0f ) {
-            canFire = true;
-        }
 
         // Normalize angle to [-PI,PI] range. This ensures that the turret turns the shortest way.
         while (angleDiff < -MathUtils.PI) angleDiff += 2 * MathUtils.PI;
@@ -97,6 +96,13 @@ public class Turret {
 
         rot = MathUtils.radiansToDegrees * angle;
         rot -= 90f;
+
+        float tmp = Math.abs(MathUtils.radiansToDegrees * angleDiff);
+        if ( tmp < 1f ) {
+            canFire = true;
+        }
+
+
 
         if (canFire && turretCooldown < 0) {
             Vector2 gunEnd = new Vector2(0f, 35f * TokyoRushGame.scale);

@@ -68,6 +68,10 @@ public class Tank {
         turret.rot = rot;
     }
 
+    public boolean getCanFire() {
+        return turret.canFire;
+    }
+
     private Vector2 getRandomTankVelocity(float rot) {
         Vector2 vel = new Vector2(0f, 10f);
         vel.rotate( rot );

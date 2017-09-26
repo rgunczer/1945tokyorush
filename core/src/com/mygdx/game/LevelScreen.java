@@ -17,6 +17,7 @@ public class LevelScreen extends Screen {
     float playerBulletRadius;
     final int playerBulletCount = 120;
 
+    float enemyBulletRadius;
     final int enemyBulletCount = 120;
 
     Terrain terrain;
@@ -29,7 +30,7 @@ public class LevelScreen extends Screen {
     Array<Explosion> explosions;
 
     final int plantCount = 33;
-    final int tankCount = 6;
+    final int tankCount = 9;
     final int explosionCount = 33;
 
     PlantFactory plantFactory;
@@ -84,9 +85,11 @@ public class LevelScreen extends Screen {
     @Override
     public void init() {
         playerBulletRadius = 10f * TokyoRushGame.scale;
+        enemyBulletRadius = 10f * TokyoRushGame.scale;
 
         offset.set(0f, 0f);
-        scrollSpeedY = -1.2f; //-3.5f;
+        scrollSpeedY = -1.2f;
+        //scrollSpeedY = -0.2f;
 
         TokyoRushGame.player.setOnLevel();
 
@@ -288,14 +291,18 @@ public class LevelScreen extends Screen {
     }
 
     public void checkCollisionEnemyBulletsVsPlayer() {
-        Circle playerCircle = new Circle();
+        Circle enemyBulletCircle = new Circle();
+        enemyBulletCircle.radius = 10f;
 
         for(Bullet bullet: enemyBullets) {
             if (bullet.live) {
-
+                enemyBulletCircle.x = bullet.pos.x;
+                enemyBulletCircle.y = bullet.pos.y;
+                if (TokyoRushGame.player.checkCollision(enemyBulletCircle)) {
+                    bullet.live = false;
+                }
             }
         }
-
     }
 
     @Override
@@ -336,8 +343,38 @@ public class LevelScreen extends Screen {
 
         endRender();
 
-        //drawTankBoundingCircles();
+        drawTankBoundingCircles();
         //drawBulletBoundingCircles();
+        drawPlayerBoundingCircle();
+        drawEnemyBulletBoundingCircle();
+    }
+
+    private void drawEnemyBulletBoundingCircle() {
+        Circle boundingCircle = new Circle();
+        boundingCircle.radius = enemyBulletRadius;
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.WHITE);
+        for(Bullet bullet: enemyBullets) {
+            if (bullet.live) {
+                boundingCircle.x = bullet.pos.x;
+                boundingCircle.y = bullet.pos.y;
+                shapeRenderer.circle(boundingCircle.x, boundingCircle.y, boundingCircle.radius);
+            }
+        }
+        shapeRenderer.end();
+    }
+
+    private void drawPlayerBoundingCircle() {
+        Circle boundingCircle = new Circle();
+        boundingCircle.radius = TokyoRushGame.player.boundingCircleRadius;
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.YELLOW);
+
+        boundingCircle.x = TokyoRushGame.player.boundingCircle.x;
+        boundingCircle.y = TokyoRushGame.player.boundingCircle.y;
+        shapeRenderer.circle(boundingCircle.x, boundingCircle.y, boundingCircle.radius);
+
+        shapeRenderer.end();
     }
 
     private void drawBulletBoundingCircles() {
@@ -357,8 +394,8 @@ public class LevelScreen extends Screen {
 
     private void drawTankBoundingCircles() {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.WHITE);
         for(Tank tank: tanks) {
+            shapeRenderer.setColor( tank.getCanFire() ? Color.WHITE : Color.BLACK);
             shapeRenderer.circle(tank.boundingCircle.x, tank.boundingCircle.y, tank.boundingCircle.radius);
         }
         shapeRenderer.end();

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 
@@ -27,14 +28,17 @@ public class Player {
     TextureRegion hit;
     TextureRegion normal;
     TextureRegion shadow;
+    TextureRegion body;
 
     float bulletSpeed;
-
+    float hitCooldown;
     float takeOffSpeed = 100f; ///400f;
-
+    float boundingCircleRadius;
     float distanceToTarget;
 
     float fingerOffsetY;
+
+    Circle boundingCircle;
 
     public GunTypeEnum gunType;
 
@@ -71,6 +75,7 @@ public class Player {
         normal = new TextureRegion(texture, 168, 0, 168, 168);
         shadow = new TextureRegion(texture, 336, 0, 168, 168);
 
+
         TextureRegion[] propFrames = new TextureRegion[3];
         propFrames[0] = new TextureRegion(texture, 0, 168, 168, 168);
         propFrames[1] = new TextureRegion(texture, 168, 168, 168, 168);
@@ -97,6 +102,10 @@ public class Player {
         gunType = GunTypeEnum.DOUBLE_GUN;
 
         bulletSpeed = 730f * TokyoRushGame.scale;
+        boundingCircleRadius = 40f * TokyoRushGame.scale;
+
+        boundingCircle = new Circle();
+        boundingCircle.radius = boundingCircleRadius;
     }
 
     public void setOnAirfield() {
@@ -108,6 +117,8 @@ public class Player {
         shadowDistance = 5f * TokyoRushGame.scale;
         scaleShadow = scale * 0.95f;
         state = PlayerStateEnum.IDLE_ON_AIRFIELD;
+        body = normal;
+        hitCooldown = 0.4f;
     }
 
     public void setOnLevel() {
@@ -125,6 +136,7 @@ public class Player {
         scale = 1.0f;
         shadowDistance = 60f * TokyoRushGame.scale;
         scaleShadow = 0.5f;
+        body = normal;
     }
 
     public void setTargetPosition(float x, float y) {
@@ -159,6 +171,20 @@ public class Player {
         return p;
     }
 
+    public boolean checkCollision(Circle circle) {
+        if (state == PlayerStateEnum.FLYING) {
+            boolean hit = boundingCircle.overlaps(circle);
+            if (hit) {
+                //body = template.bodyHit;
+                hitCooldown = 0.4f;
+                body = this.hit;
+            }
+            return hit;
+        }
+        return false;
+    }
+
+
     public void update(float delta) {
         propAnimStartTime += 0.1f;
         switch (state) {
@@ -185,6 +211,13 @@ public class Player {
                 fire();
             }
             break;
+        }
+
+        if (body == hit) {
+            hitCooldown -= 0.1f;
+            if (hitCooldown < 0f) {
+                body = normal;
+            }
         }
     }
 
@@ -302,14 +335,6 @@ public class Player {
     }
 
     public void render(SpriteBatch batch) {
-//        public void draw (TextureRegion region,
-//        float x, float y,
-//        float originX, float originY,
-//        float width, float height,
-//        float scaleX, float scaleY,
-//        float rotation);
-
-
         float width = normal.getRegionWidth() * TokyoRushGame.scale;
         float height = normal.getRegionHeight() * TokyoRushGame.scale;
 
@@ -322,9 +347,12 @@ public class Player {
         float y = pos.y - height * 0.5f;
 
         batch.draw(shadow, x + shadowDistance, y - shadowDistance, originX, originY, width, height, scaleShadow, scaleShadow, rotation);
-        batch.draw(normal, x, y, originX, originY, width, height, scale, scale, rotation);
+        batch.draw(body, x, y, originX, originY, width, height, scale, scale, rotation);
 
         TextureRegion prop = propellerAnim.getKeyFrame(propAnimStartTime, true);
         batch.draw(prop, x, y, originX, originY, width, height, scale, scale, rotation);
+
+        boundingCircle.x = pos.x;
+        boundingCircle.y = pos.y - (10f * TokyoRushGame.scale);
     }
 }
