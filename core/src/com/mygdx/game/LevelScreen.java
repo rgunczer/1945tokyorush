@@ -177,7 +177,8 @@ public class LevelScreen extends Screen {
     public void update(float delta) {
         OrthographicCamera camera = TokyoRushGame.camera;
 
-        checkCollision();
+        checkCollisionPlayerBulletsVsEnemy();
+        checkCollisionEnemyBulletsVsPlayer();
 
         terrain.update(scrollSpeedY);
 
@@ -262,7 +263,7 @@ public class LevelScreen extends Screen {
         return null;
     }
 
-    private void checkCollision() {
+    private void checkCollisionPlayerBulletsVsEnemy() {
         Circle playerBulletCircle = new Circle();
         playerBulletCircle.radius = playerBulletRadius;
 
@@ -284,6 +285,17 @@ public class LevelScreen extends Screen {
                 }
             }
         }
+    }
+
+    public void checkCollisionEnemyBulletsVsPlayer() {
+        Circle playerCircle = new Circle();
+
+        for(Bullet bullet: enemyBullets) {
+            if (bullet.live) {
+
+            }
+        }
+
     }
 
     @Override
