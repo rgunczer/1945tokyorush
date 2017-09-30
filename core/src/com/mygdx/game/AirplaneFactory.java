@@ -49,14 +49,43 @@ public class AirplaneFactory {
         //"prop_big"=(22,82,17,17)
 
         airplaneTemplates = new Array<AirplaneTemplate>(airplateTemplateCount);
-        AirplaneTemplate airplaneTemplate = createPanther();
-        airplaneTemplates.add(airplaneTemplate);
+
+        airplaneTemplates.add(createPanther());
+        airplaneTemplates.add(createGreen());
+        airplaneTemplates.add(createBlack());
+        airplaneTemplates.add(createWhite());
     }
 
     private AirplaneTemplate createPanther() {
         AirplaneTemplate template = new AirplaneTemplate();
         template.body = panther;
         template.hit = pantherHit;
+
+        return template;
+    }
+
+    private AirplaneTemplate createGreen() {
+        AirplaneTemplate template = new AirplaneTemplate();
+        template.body = green;
+        template.hit = greenHit;
+
+        return template;
+    }
+
+    private AirplaneTemplate createBlack() {
+        AirplaneTemplate template = new AirplaneTemplate();
+        template.body = black;
+        template.hit = blackHit;
+
+        return template;
+    }
+
+    private AirplaneTemplate createWhite() {
+        AirplaneTemplate template = new AirplaneTemplate();
+        template.body = white;
+        template.hit = whiteHit;
+
+        return template;
     }
 
 }
