@@ -8,8 +8,8 @@ public class AirplaneFactory {
 
     Texture texture;
 
-    final int airplateTemplateCount = 4;
-    Array<AirplaneTemplate> airplaneTemplates;
+    final int templatesCount = 4;
+    Array<AirplaneTemplate> templates;
 
     TextureRegion shadow;
 
@@ -48,18 +48,19 @@ public class AirplaneFactory {
         //"prop_med"=(22,67,17,17)
         //"prop_big"=(22,82,17,17)
 
-        airplaneTemplates = new Array<AirplaneTemplate>(airplateTemplateCount);
+        templates = new Array<AirplaneTemplate>(templatesCount);
 
-        airplaneTemplates.add(createPanther());
-        airplaneTemplates.add(createGreen());
-        airplaneTemplates.add(createBlack());
-        airplaneTemplates.add(createWhite());
+        templates.add(createPanther());
+        templates.add(createGreen());
+        templates.add(createBlack());
+        templates.add(createWhite());
     }
 
     private AirplaneTemplate createPanther() {
         AirplaneTemplate template = new AirplaneTemplate();
         template.body = panther;
         template.hit = pantherHit;
+        template.shadow = shadow;
 
         return template;
     }
@@ -68,6 +69,7 @@ public class AirplaneFactory {
         AirplaneTemplate template = new AirplaneTemplate();
         template.body = green;
         template.hit = greenHit;
+        template.shadow = shadow;
 
         return template;
     }
@@ -76,6 +78,7 @@ public class AirplaneFactory {
         AirplaneTemplate template = new AirplaneTemplate();
         template.body = black;
         template.hit = blackHit;
+        template.shadow = shadow;
 
         return template;
     }
@@ -84,8 +87,30 @@ public class AirplaneFactory {
         AirplaneTemplate template = new AirplaneTemplate();
         template.body = white;
         template.hit = whiteHit;
+        template.shadow = shadow;
 
         return template;
+    }
+
+    Airplane get(int type) {
+        AirplaneTemplate template = null;
+
+        if (type == Airplane.ZERO_PANTHER) {
+            template = templates.get(type);
+        } else if (type == Airplane.ZERO_BLACK) {
+            template = templates.get(type);
+        } else if (type == Airplane.ZERO_GREEN) {
+            template = templates.get(type);
+        } else if (type == Airplane.ZERO_WHITE) {
+            template = templates.get(type);
+        }
+
+        if (template != null) {
+            Airplane airplane = new Airplane(template);
+            return airplane;
+        }
+
+        return null;
     }
 
 }

@@ -32,11 +32,12 @@ public class LevelScreen extends Screen {
 
     final int plantCount = 33;
     final int tankCount = 9;
-    final int airplaneCount = 20;
+    final int airplaneCount = 6;
     final int explosionCount = 33;
 
     PlantFactory plantFactory;
     TankFactory tankFactory;
+    AirplaneFactory airplaneFactory;
 
     Vector2 offset;
     float scrollSpeedY;
@@ -62,20 +63,19 @@ public class LevelScreen extends Screen {
             enemyBullets.add(new Bullet());
         }
 
-        airplanes = new Array<Airplane>(airplaneCount);
-        for (int i = 0; i < airplaneCount; ++i) {
-            airplanes.add(new Airplane());
-        }
-
         plantFactory = new PlantFactory();
         plantFactory.create();
 
         tankFactory = new TankFactory();
         tankFactory.create();
 
+        airplaneFactory = new AirplaneFactory();
+        airplaneFactory.create();
+
         plants = new Array<Plant>(plantCount);
         tanks = new Array<Tank>(tankCount);
         explosions = new Array<Explosion>(explosionCount);
+        airplanes = new Array<Airplane>(airplaneCount);
 
         Explosion.create();
         Explosion explosion;
@@ -112,6 +112,19 @@ public class LevelScreen extends Screen {
         createRandomTanks();
         createRandomExplosions();
         createRandomClouds();
+        createRandomAirplanes();
+    }
+
+    private void createRandomAirplanes() {
+        Airplane airplane;
+        for (int i = 0; i < airplaneCount; ++i) {
+            airplane = airplaneFactory.get(Airplane.ZERO_GREEN);
+            airplane.pos.x = TokyoRushGame.camera.viewportWidth * 0.5f;
+            airplane.pos.y = TokyoRushGame.camera.viewportHeight * 0.75f;
+            airplane.init();
+
+            airplanes.add(airplane);
+        }
     }
 
     private void createRandomClouds() {
@@ -208,6 +221,10 @@ public class LevelScreen extends Screen {
                 tank.pos.y = MathUtils.random(camera.viewportHeight + 200f * TokyoRushGame.scale, camera.viewportHeight + 200f * TokyoRushGame.scale);
                 tank.init();
             }
+        }
+
+        for(Airplane airplane: airplanes) {
+            airplane.update(delta, scrollSpeedY);
         }
 
         for(Bullet bullet: playerBullets) {
@@ -324,6 +341,10 @@ public class LevelScreen extends Screen {
 
         for (Plant plant : plants) {
             plant.draw(batch, offset);
+        }
+
+        for (Airplane airplane: airplanes) {
+            airplane.draw(batch, offset);
         }
 
         for(Bullet bullet: enemyBullets) {
