@@ -27,10 +27,12 @@ public class LevelScreen extends Screen {
 
     Array<Plant> plants;
     Array<Tank> tanks;
+    Array<Airplane> airplanes;
     Array<Explosion> explosions;
 
     final int plantCount = 33;
     final int tankCount = 9;
+    final int airplaneCount = 20;
     final int explosionCount = 33;
 
     PlantFactory plantFactory;
@@ -58,6 +60,11 @@ public class LevelScreen extends Screen {
         enemyBullets = new Array<Bullet>(enemyBulletCount);
         for (int i = 0; i < enemyBulletCount; ++i) {
             enemyBullets.add(new Bullet());
+        }
+
+        airplanes = new Array<Airplane>(airplaneCount);
+        for (int i = 0; i < airplaneCount; ++i) {
+            airplanes.add(new Airplane());
         }
 
         plantFactory = new PlantFactory();
