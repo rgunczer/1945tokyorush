@@ -13,19 +13,22 @@ public class Airplane {
     public static int ZERO_GREEN = 3;
 
 
+    float propAnimStartTime;
     float rot;
     float scale;
+    float speed;
     public Vector2 pos = new Vector2();
     public Vector2 vel = new Vector2();
     public TextureRegion body;
     public TextureRegion shadow;
+    AirplaneTemplate template;
 
     public Airplane(AirplaneTemplate template) {
+        this.template = template;
         body = template.body;
         shadow = template.shadow;
         scale = 0.68f;
         rot = 180f;
-
     }
 
     private Vector2 getRandomVelocity(float rot) {
@@ -35,12 +38,18 @@ public class Airplane {
         return vel;
     }
 
-    public void init() {
+    public void init(float speed) {
+        propAnimStartTime = 0f;
+        this.speed = speed;
         this.rot = MathUtils.random(0f, 360f);
         this.vel = getRandomVelocity(rot);
+        this.vel.nor();
+        this.vel.scl(this.speed);
+        this.body = template.body;
     }
 
     public void update(float delta, float scrollY) {
+        propAnimStartTime += 0.1f;
         pos.y += scrollY;
 
         pos.x += vel.x * delta;
@@ -61,6 +70,9 @@ public class Airplane {
 
         batch.draw(shadow, x + offset.x + shadowOffset, y + offset.y - shadowOffset, originX, originY, w, h, scaleShadow, scaleShadow, rot);
         batch.draw(body, x + offset.x, y + offset.y, originX, originY, w, h, scale, scale, rot);
+
+        TextureRegion prop = AirplaneTemplate.propellerAnim.getKeyFrame(propAnimStartTime, true);
+        batch.draw(prop, x, y, originX, originY, w, h, scale, scale, rot);
 
     }
 }

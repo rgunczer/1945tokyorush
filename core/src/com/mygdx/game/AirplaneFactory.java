@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
@@ -25,6 +26,8 @@ public class AirplaneFactory {
     TextureRegion white;
     TextureRegion whiteHit;
 
+    Animation<TextureRegion> propellerAnim;
+
     public void create() {
         texture = new Texture("airplanes.png");
 
@@ -44,16 +47,22 @@ public class AirplaneFactory {
         white = new TextureRegion(texture, 240*sc, 0, 60*sc, 60*sc);
         whiteHit = new TextureRegion (texture, 240*sc, 60*sc, 60*sc, 60*sc);
 
-        //"prop_small"=(22,54,17,17)
-        //"prop_med"=(22,67,17,17)
-        //"prop_big"=(22,82,17,17)
+        TextureRegion[] propFrames = new TextureRegion[3];
+        propFrames[0] = new TextureRegion(texture,   0, 240, 60*sc, 60*sc);
+        propFrames[1] = new TextureRegion(texture, 120, 240, 60*sc, 60*sc);
+        propFrames[2] = new TextureRegion(texture, 240, 240, 60*sc, 60*sc);
+
+        propellerAnim = new Animation<TextureRegion>(0.2f, propFrames);
+        propellerAnim.setPlayMode(Animation.PlayMode.LOOP);
+
+        AirplaneTemplate.propellerAnim = propellerAnim;
 
         templates = new Array<AirplaneTemplate>(templatesCount);
 
         templates.add(createPanther());
-        templates.add(createGreen());
         templates.add(createBlack());
         templates.add(createWhite());
+        templates.add(createGreen());
     }
 
     private AirplaneTemplate createPanther() {

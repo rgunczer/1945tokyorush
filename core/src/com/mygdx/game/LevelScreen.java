@@ -115,13 +115,21 @@ public class LevelScreen extends Screen {
         createRandomAirplanes();
     }
 
+    private Vector2 getRandomAirplanePosition() {
+        Vector2 pos = new Vector2();
+        pos.x = MathUtils.random(0f, TokyoRushGame.camera.viewportWidth);
+        pos.y = TokyoRushGame.camera.viewportHeight * 1.1f;
+        return pos;
+    }
+
     private void createRandomAirplanes() {
         Airplane airplane;
         for (int i = 0; i < airplaneCount; ++i) {
-            airplane = airplaneFactory.get(Airplane.ZERO_GREEN);
-            airplane.pos.x = TokyoRushGame.camera.viewportWidth * 0.5f;
-            airplane.pos.y = TokyoRushGame.camera.viewportHeight * 0.75f;
-            airplane.init();
+            float speed = MathUtils.random(60f, 120f);
+            int type = MathUtils.random(0, 3);
+            airplane = airplaneFactory.get(type);
+            airplane.pos.set(getRandomAirplanePosition());
+            airplane.init(speed);
 
             airplanes.add(airplane);
         }
@@ -225,6 +233,15 @@ public class LevelScreen extends Screen {
 
         for(Airplane airplane: airplanes) {
             airplane.update(delta, scrollSpeedY);
+
+            if (airplane.pos.y < -TokyoRushGame.camera.viewportHeight * 0.1f ||
+                airplane.pos.y > (TokyoRushGame.camera.viewportHeight + TokyoRushGame.camera.viewportWidth) ||
+                airplane.pos.x < -TokyoRushGame.camera.viewportHeight * 0.1f ||
+                airplane.pos.x > TokyoRushGame.camera.viewportWidth * 1.1f) {
+
+                airplane.pos.set(getRandomAirplanePosition());
+                airplane.init(MathUtils.random(120f, 240f));
+            }
         }
 
         for(Bullet bullet: playerBullets) {
@@ -371,10 +388,10 @@ public class LevelScreen extends Screen {
 
         endRender();
 
-        drawTankBoundingCircles();
+        //drawTankBoundingCircles();
         //drawBulletBoundingCircles();
-        drawPlayerBoundingCircle();
-        drawEnemyBulletBoundingCircle();
+        //drawPlayerBoundingCircle();
+        //drawEnemyBulletBoundingCircle();
     }
 
     private void drawEnemyBulletBoundingCircle() {
