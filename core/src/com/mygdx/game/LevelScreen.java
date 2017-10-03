@@ -396,6 +396,17 @@ public class LevelScreen extends Screen {
         //drawBulletBoundingCircles();
         //drawPlayerBoundingCircle();
         //drawEnemyBulletBoundingCircle();
+        drawAirplaneBoundingCircles();
+    }
+
+    private void drawAirplaneBoundingCircles() {
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.YELLOW);
+        for(Airplane airplane: airplanes) {
+            //shapeRenderer.setColor( tank.getCanFire() ? Color.WHITE : Color.BLACK);
+            shapeRenderer.circle(airplane.boundingCircle.x, airplane.boundingCircle.y, airplane.boundingCircle.radius);
+        }
+        shapeRenderer.end();
     }
 
     private void drawEnemyBulletBoundingCircle() {

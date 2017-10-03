@@ -3,6 +3,8 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 public class AirplaneFactory {
@@ -28,8 +30,12 @@ public class AirplaneFactory {
 
     Animation<TextureRegion> propellerAnim;
 
+    float boundingCircleRadius;
+
     public void create() {
         texture = new Texture("airplanes.png");
+
+        boundingCircleRadius = 30f * TokyoRushGame.scale;
 
         final int sc = 2;
 
@@ -70,6 +76,7 @@ public class AirplaneFactory {
         template.body = panther;
         template.hit = pantherHit;
         template.shadow = shadow;
+        template.boundingCircle = new Circle(new Vector2(0f, 0f), boundingCircleRadius);
 
         return template;
     }
@@ -79,6 +86,7 @@ public class AirplaneFactory {
         template.body = green;
         template.hit = greenHit;
         template.shadow = shadow;
+        template.boundingCircle = new Circle(new Vector2(0f, 0f), boundingCircleRadius);
 
         return template;
     }
@@ -88,6 +96,7 @@ public class AirplaneFactory {
         template.body = black;
         template.hit = blackHit;
         template.shadow = shadow;
+        template.boundingCircle = new Circle(new Vector2(0f, 0f), boundingCircleRadius);
 
         return template;
     }
@@ -97,6 +106,7 @@ public class AirplaneFactory {
         template.body = white;
         template.hit = whiteHit;
         template.shadow = shadow;
+        template.boundingCircle = new Circle(new Vector2(0f, 0f), boundingCircleRadius);
 
         return template;
     }

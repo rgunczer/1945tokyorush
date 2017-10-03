@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -22,6 +23,7 @@ public class Airplane {
     public TextureRegion body;
     public TextureRegion shadow;
     AirplaneTemplate template;
+    Circle boundingCircle;
 
     public Airplane(AirplaneTemplate template) {
         this.template = template;
@@ -29,6 +31,7 @@ public class Airplane {
         shadow = template.shadow;
         scale = 0.68f;
         rot = 180f;
+        this.boundingCircle = new Circle(template.boundingCircle);
     }
 
     private Vector2 getRandomVelocity(float rot) {
@@ -74,5 +77,7 @@ public class Airplane {
         TextureRegion prop = AirplaneTemplate.propellerAnim.getKeyFrame(propAnimStartTime, true);
         batch.draw(prop, x, y, originX, originY, w, h, scale, scale, rot);
 
+        boundingCircle.x = pos.x;
+        boundingCircle.y = pos.y;
     }
 }
