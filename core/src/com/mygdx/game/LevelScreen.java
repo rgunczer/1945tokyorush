@@ -185,7 +185,11 @@ public class LevelScreen extends Screen {
 
         Tank tank;
         for (int i = 0; i < tankCount; ++i) {
-            tank = tankFactory.get(Tank.TANK_TYPE_SMALL);
+            if (MathUtils.randomBoolean()) {
+                tank = tankFactory.get(Tank.TANK_TYPE_SMALL);
+            } else {
+                tank = tankFactory.get(Tank.TANK_TYPE_BIG);
+            }
             tank.pos.x = MathUtils.random(-camera.viewportWidth / 4f, camera.viewportWidth);
             tank.pos.y = MathUtils.random(0f, camera.viewportHeight);
             tank.init();

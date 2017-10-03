@@ -102,15 +102,29 @@ public class Turret {
             canFire = true;
         }
 
-
-
         if (canFire && turretCooldown < 0) {
-            Vector2 gunEnd = new Vector2(0f, 35f * TokyoRushGame.scale);
-            gunEnd.rotate(rot);
-            Vector2 vel = new Vector2(playerPos.x - pos.x, playerPos.y - pos.y);
-            vel.nor();
-            vel.scl(200f * TokyoRushGame.scale);
-            TokyoRushGame.levelScreen.fireEnemy( new Vector2(pos.x + gunEnd.x, pos.y + gunEnd.y), vel);
+            if (template.type == TURRET_TANK_SMALL) {
+                Vector2 gunEnd = new Vector2(0f, 35f * TokyoRushGame.scale);
+                gunEnd.rotate(rot);
+                Vector2 vel = new Vector2(playerPos.x - pos.x, playerPos.y - pos.y);
+                vel.nor();
+                vel.scl(200f * TokyoRushGame.scale);
+
+                TokyoRushGame.levelScreen.fireEnemy(new Vector2(pos.x + gunEnd.x, pos.y + gunEnd.y), vel);
+            } else if (template.type == TURRET_TANK_BIG) {
+                Vector2 gunEnd0 = new Vector2(8f * TokyoRushGame.scale, 35f * TokyoRushGame.scale);
+                gunEnd0.rotate(rot);
+
+                Vector2 gunEnd1 = new Vector2(-8f * TokyoRushGame.scale, 35f * TokyoRushGame.scale);
+                gunEnd1.rotate(rot);
+
+                Vector2 vel = new Vector2(playerPos.x - pos.x, playerPos.y - pos.y);
+                vel.nor();
+                vel.scl(200f * TokyoRushGame.scale);
+
+                TokyoRushGame.levelScreen.fireEnemy(new Vector2(pos.x + gunEnd0.x, pos.y + gunEnd0.y), vel);
+                TokyoRushGame.levelScreen.fireEnemy(new Vector2(pos.x + gunEnd1.x, pos.y + gunEnd1.y), vel);
+            }
             turretCooldown = 100;
         }
 

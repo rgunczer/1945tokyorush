@@ -26,8 +26,16 @@ public class TankFactory {
         TankTemplate tankTemplate;
         TurretTemplate turretTemplate;
 
+        // small
         tankTemplate = createTankTemplateSmall(textureScaleFactor);
         turretTemplate = createTankTurretSmall(textureScaleFactor);
+
+        tankTemplates.add(tankTemplate);
+        turretTemplates.add(turretTemplate);
+
+        // big
+        tankTemplate = createTankTemplateBig(textureScaleFactor);
+        turretTemplate = createTankTurretBig(textureScaleFactor);
 
         tankTemplates.add(tankTemplate);
         turretTemplates.add(turretTemplate);
@@ -78,6 +86,51 @@ public class TankFactory {
         return tankTemplate;
     }
 
+    private TurretTemplate createTankTurretBig(final int textureScaleFactor) {
+        final int sc = textureScaleFactor;
+        final float scale = 0.6f;
+
+        TextureRegion turretNormal = new TextureRegion(texture, 270*sc, 10*sc, 35*sc, 73*sc);
+        TextureRegion turretWreck = new TextureRegion(texture, 270*sc, 84*sc, 35*sc, 73*sc);
+        TextureRegion turretHit = new TextureRegion(texture, 270*sc, 161*sc, 35*sc, 73*sc);
+
+        TurretTemplate turretTemplate = new TurretTemplate(
+                Turret.TURRET_TANK_BIG,
+                new Vector2(1f, 1f),
+                turretNormal,
+                turretHit,
+                turretWreck,
+                scale);
+
+        return turretTemplate;
+    }
+
+    private TankTemplate createTankTemplateBig(final int textureScaleFactor) {
+        final int sc = textureScaleFactor;
+        final float scale = 0.6f;
+
+        final TextureRegion bodyNormal = new TextureRegion(texture, 207*sc, 0, 57*sc, 71*sc);
+        final TextureRegion bodyShadow = new TextureRegion(texture, 148*sc, 0, 57*sc, 71*sc);
+        final TextureRegion bodyHit = new TextureRegion(texture, 207*sc, 144*sc, 57*sc, 71*sc);
+        final TextureRegion bodyWreck = new TextureRegion(texture, 207*sc, 72*sc, 57*sc, 71*sc);
+        final TextureRegion bodyWreckShadow = new TextureRegion(texture, 148*sc, 72*sc, 57*sc, 71*sc);
+        final TextureRegion track = new TextureRegion(texture, 117*sc, 214*sc, 50*sc, 28*sc);
+        final float boundingCircleRadius = 34f * TokyoRushGame.scale;
+        final int hitPoint = 10;
+        TankTemplate tankTemplate = new TankTemplate(
+                Tank.TANK_TYPE_BIG,
+                bodyNormal,
+                bodyShadow,
+                bodyHit,
+                bodyWreck,
+                bodyWreckShadow,
+                track,
+                scale,
+                boundingCircleRadius,
+                hitPoint);
+
+        return tankTemplate;
+    }
 
     Tank get(int type) {
         TankTemplate tankTemplate = null;
@@ -87,7 +140,8 @@ public class TankFactory {
             tankTemplate = tankTemplates.get(type);
             turretTemplate = turretTemplates.get(Turret.TURRET_TANK_SMALL);
         } else if (type == Tank.TANK_TYPE_BIG) {
-
+            tankTemplate = tankTemplates.get(type);
+            turretTemplate = turretTemplates.get(Turret.TURRET_TANK_BIG);
         }
 
         if (tankTemplate != null && turretTemplate != null) {
