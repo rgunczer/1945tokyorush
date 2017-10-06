@@ -331,6 +331,21 @@ public class LevelScreen extends Screen {
                         bullet.live = false;
                     }
                 }
+
+                if (bullet.live) {
+                    for(Airplane airplane: airplanes) {
+                        if (airplane.checkCollision(playerBulletCircle)) {
+                            if (airplane.damage(bullet.hitPoint)) {
+                                Explosion explosion = getExplosion();
+                                if (explosion != null) {
+                                    explosion.init(airplane.pos);
+                                }
+                            }
+                            bullet.live = false;
+                        }
+                    }
+                }
+
             }
         }
     }
@@ -396,7 +411,7 @@ public class LevelScreen extends Screen {
         //drawBulletBoundingCircles();
         //drawPlayerBoundingCircle();
         //drawEnemyBulletBoundingCircle();
-        drawAirplaneBoundingCircles();
+        //drawAirplaneBoundingCircles();
     }
 
     private void drawAirplaneBoundingCircles() {

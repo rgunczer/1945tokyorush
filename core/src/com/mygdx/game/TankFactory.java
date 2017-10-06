@@ -116,7 +116,7 @@ public class TankFactory {
         final TextureRegion bodyWreckShadow = new TextureRegion(texture, 148*sc, 72*sc, 57*sc, 71*sc);
         final TextureRegion track = new TextureRegion(texture, 117*sc, 214*sc, 50*sc, 28*sc);
         final float boundingCircleRadius = 34f * TokyoRushGame.scale;
-        final int hitPoint = 10;
+        final int hitPoint = 20;
         TankTemplate tankTemplate = new TankTemplate(
                 Tank.TANK_TYPE_BIG,
                 bodyNormal,

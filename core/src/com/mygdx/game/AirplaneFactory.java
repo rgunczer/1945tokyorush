@@ -77,6 +77,8 @@ public class AirplaneFactory {
         template.hit = pantherHit;
         template.shadow = shadow;
         template.boundingCircle = new Circle(new Vector2(0f, 0f), boundingCircleRadius);
+        template.hitPoint = 10;
+        template.scale = 0.68f;
 
         return template;
     }
@@ -87,6 +89,8 @@ public class AirplaneFactory {
         template.hit = greenHit;
         template.shadow = shadow;
         template.boundingCircle = new Circle(new Vector2(0f, 0f), boundingCircleRadius);
+        template.hitPoint = 15;
+        template.scale = 0.68f;
 
         return template;
     }
@@ -97,6 +101,8 @@ public class AirplaneFactory {
         template.hit = blackHit;
         template.shadow = shadow;
         template.boundingCircle = new Circle(new Vector2(0f, 0f), boundingCircleRadius);
+        template.hitPoint = 30;
+        template.scale = 0.68f;
 
         return template;
     }
@@ -107,6 +113,8 @@ public class AirplaneFactory {
         template.hit = whiteHit;
         template.shadow = shadow;
         template.boundingCircle = new Circle(new Vector2(0f, 0f), boundingCircleRadius);
+        template.hitPoint = 20;
+        template.scale = 0.68f;
 
         return template;
     }

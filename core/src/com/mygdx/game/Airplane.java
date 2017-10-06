@@ -24,13 +24,16 @@ public class Airplane {
     public TextureRegion shadow;
     AirplaneTemplate template;
     Circle boundingCircle;
+    float hitCooldown;
+    int hitPoint;
 
     public Airplane(AirplaneTemplate template) {
         this.template = template;
         body = template.body;
         shadow = template.shadow;
-        scale = 0.68f;
+        scale = template.scale;
         rot = 180f;
+        this.scale = template.scale;
         this.boundingCircle = new Circle(template.boundingCircle);
     }
 
@@ -41,6 +44,18 @@ public class Airplane {
         return vel;
     }
 
+    public boolean checkCollision(Circle circle) {
+        if (hitPoint > 0) {
+            boolean hit = boundingCircle.overlaps(circle);
+            if (hit) {
+                body = template.hit;
+                hitCooldown = 0.4f;
+            }
+            return hit;
+        }
+        return false;
+    }
+
     public void init(float speed) {
         propAnimStartTime = 0f;
         this.speed = speed;
@@ -49,6 +64,8 @@ public class Airplane {
         this.vel.nor();
         this.vel.scl(this.speed);
         this.body = template.body;
+        this.hitPoint = template.hitPoint;
+        this.scale = template.scale;
     }
 
     public void update(float delta, float scrollY) {
@@ -57,6 +74,31 @@ public class Airplane {
 
         pos.x += vel.x * delta;
         pos.y += vel.y * delta;
+
+        if (body == template.hit) {
+            hitCooldown -= 0.1f;
+            if (hitCooldown < 0f) {
+                body = template.body;
+            }
+        }
+
+        if (hitPoint <= 0) {
+            scale -= 0.001f;
+            if (scale < 0.4f) {
+                scale = 0.4f;
+            }
+        }
+    }
+
+    public boolean damage(int hitPoint) {
+        this.hitPoint -= hitPoint;
+        if (this.hitPoint <= 0) {
+            float length = this.vel.len() * 2.0f;
+            this.vel.setLength(length);
+            body = template.body;
+            return true;
+        }
+        return false;
     }
 
     public void draw(SpriteBatch batch, Vector2 offset) {

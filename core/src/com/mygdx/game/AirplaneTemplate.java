@@ -11,5 +11,6 @@ public class AirplaneTemplate {
     TextureRegion body;
     TextureRegion hit;
     public Circle boundingCircle;
-
+    int hitPoint;
+    float scale;
 }
