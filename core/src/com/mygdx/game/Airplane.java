@@ -26,6 +26,7 @@ public class Airplane {
     Circle boundingCircle;
     float hitCooldown;
     int hitPoint;
+    boolean dead;
 
     public Airplane(AirplaneTemplate template) {
         this.template = template;
@@ -35,6 +36,7 @@ public class Airplane {
         rot = 180f;
         this.scale = template.scale;
         this.boundingCircle = new Circle(template.boundingCircle);
+        dead = false;
     }
 
     private Vector2 getRandomVelocity(float rot) {
@@ -66,6 +68,7 @@ public class Airplane {
         this.body = template.body;
         this.hitPoint = template.hitPoint;
         this.scale = template.scale;
+        dead = false;
     }
 
     public void update(float delta, float scrollY) {
@@ -83,9 +86,10 @@ public class Airplane {
         }
 
         if (hitPoint <= 0) {
-            scale -= 0.001f;
-            if (scale < 0.4f) {
-                scale = 0.4f;
+            scale -= 0.002f;
+            if (scale < 0.5f) {
+                scale = 0.5f;
+                dead = true;
             }
         }
     }

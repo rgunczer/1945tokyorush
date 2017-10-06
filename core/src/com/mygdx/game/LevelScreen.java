@@ -241,8 +241,11 @@ public class LevelScreen extends Screen {
             if (airplane.pos.y < -TokyoRushGame.camera.viewportHeight * 0.1f ||
                 airplane.pos.y > (TokyoRushGame.camera.viewportHeight + TokyoRushGame.camera.viewportWidth) ||
                 airplane.pos.x < -TokyoRushGame.camera.viewportHeight * 0.1f ||
-                airplane.pos.x > TokyoRushGame.camera.viewportWidth * 1.1f) {
+                airplane.pos.x > TokyoRushGame.camera.viewportWidth * 1.1f || airplane.dead) {
 
+                if (airplane.dead) {
+                    spawnExplosionAt(airplane.pos);
+                }
                 airplane.pos.set(getRandomAirplanePosition());
                 airplane.init(MathUtils.random(120f, 240f));
             }
@@ -311,6 +314,13 @@ public class LevelScreen extends Screen {
         return null;
     }
 
+    private void spawnExplosionAt(Vector2 pos) {
+        Explosion explosion = getExplosion();
+        if (explosion != null) {
+            explosion.init(pos);
+        }
+    }
+
     private void checkCollisionPlayerBulletsVsEnemy() {
         Circle playerBulletCircle = new Circle();
         playerBulletCircle.radius = playerBulletRadius;
@@ -323,10 +333,7 @@ public class LevelScreen extends Screen {
                 for(Tank tank: tanks) {
                     if (tank.checkCollision(playerBulletCircle)) {
                         if (tank.damage(bullet.hitPoint)) {
-                            Explosion explosion = getExplosion();
-                            if (explosion != null) {
-                                explosion.init(tank.pos);
-                            }
+                            spawnExplosionAt(tank.pos);
                         }
                         bullet.live = false;
                     }
@@ -336,10 +343,7 @@ public class LevelScreen extends Screen {
                     for(Airplane airplane: airplanes) {
                         if (airplane.checkCollision(playerBulletCircle)) {
                             if (airplane.damage(bullet.hitPoint)) {
-                                Explosion explosion = getExplosion();
-                                if (explosion != null) {
-                                    explosion.init(airplane.pos);
-                                }
+                                spawnExplosionAt(airplane.pos);
                             }
                             bullet.live = false;
                         }
