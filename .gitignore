@@ -124,3 +124,8 @@ Thumbs.db
 !/ios-moe/xcode/*.xcodeproj/project.pbxproj
 /ios-moe/xcode/native/
 android/assets/
+tools/1945_tokyo_rush_level2json/bin/
+tools/1945_tokyo_rush_level2json/obj/Debug/LevelToJson.csproj.CopyComplete
+tools/1945_tokyo_rush_level2json/obj/
+tools/1945_tokyo_rush_level2json/packages/
+tools/1945_tokyo_rush_level2json/.vs/
