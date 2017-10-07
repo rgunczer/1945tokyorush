@@ -20,7 +20,10 @@ public class Terrain {
     public void init() {
         float scale = TokyoRushGame.scale;
         positions = new Array<Vector2>(rowCount);
-        texture = new Texture("terrain_jungle.png");
+        //texture = new Texture("terrain_jungle.png");
+        //texture = new Texture("terrain_jungle_dark.png");
+        //texture = new Texture("terrain_water.png");
+        texture = new Texture("terrain_water_green.png");
         region = new TextureRegion(texture, 0, 0, texture.getWidth(), texture.getHeight());
         w = region.getRegionWidth() * scale;
         h = region.getRegionHeight() * scale;
