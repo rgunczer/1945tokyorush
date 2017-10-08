@@ -1,0 +1,70 @@
+package com.mygdx.game;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
+
+public class LevelLoader {
+
+    private class WayPointInfo {
+        int id;
+        Vector2 pos;
+
+        WayPointInfo(int id, float x, float y) {
+            this.id = id;
+            this.pos = new Vector2(x, y);
+        }
+    }
+
+    private class PlantInfo {
+        String type;
+        Vector2 pos;
+        PlantInfo(String type, float x, float y) {
+            this.type = type;
+            this.pos = new Vector2(x, y);
+        }
+    }
+
+    public Array<WayPointInfo> wayPoints;
+    public Array<PlantInfo> plants;
+
+    public void load(String fileName) {
+        FileHandle file = Gdx.files.internal(fileName);
+
+        JsonReader jsonReader = new JsonReader();
+        JsonValue map = jsonReader.parse(file);
+
+        for(JsonValue entry = map.child; entry != null; entry = entry.next) {
+            System.out.println(entry.name);
+            if (entry.name.equals("WayPoints")) {
+                wayPoints = new Array<WayPointInfo>(entry.size);
+                for(JsonValue wp = entry.child; wp != null; wp = wp.next) {
+                    int id = wp.getInt("id");
+                    JsonValue array = wp.get("pos");
+                    float x = array.getInt(0);
+                    float y = array.getInt(1);
+                    wayPoints.add(new WayPointInfo(id, x, y));
+                }
+            }
+            if (entry.name.equals("Plants")) {
+                plants = new Array<PlantInfo>(entry.size);
+                for(JsonValue plant = entry.child; plant != null; plant = plant.next) {
+                    String type = plant.getString("type");
+                    JsonValue array = plant.get("pos");
+                    float x = array.getInt(0);
+                    float y = array.getInt(1);
+                    plants.add(new PlantInfo(type, x, y));
+                }
+            }
+        }
+
+        System.out.println("level stat:");
+        System.out.println("waypoints: " + wayPoints.size);
+        System.out.println("plants: " + plants.size);
+        System.out.println("-----------");
+    }
+
+}

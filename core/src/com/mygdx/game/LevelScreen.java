@@ -108,6 +108,9 @@ public class LevelScreen extends Screen {
             explosion.live = false;
         }
 
+        LevelLoader levelLoader = new LevelLoader();
+        levelLoader.load("jungle_strike.json");
+
         createRandomPlants();
         createRandomTanks();
         createRandomExplosions();
