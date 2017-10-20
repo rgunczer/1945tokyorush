@@ -9,6 +9,15 @@ import com.badlogic.gdx.utils.JsonValue;
 
 public class LevelLoader {
 
+    private class LevelInfo {
+        public String name;
+        public int speed;
+        public int height;
+        public boolean cloud;
+        public String terrain;
+        public String music;
+    }
+
     private class WayPointInfo {
         int id;
         Vector2 pos;
@@ -30,7 +39,7 @@ public class LevelLoader {
 
     public Array<WayPointInfo> wayPoints;
     public Array<PlantInfo> plants;
-
+    public LevelInfo levelInfo;
 
     private void loadWaypoints(JsonValue root) {
         JsonValue entry = root.get("WayPoints");
@@ -56,6 +65,17 @@ public class LevelLoader {
         }
     }
 
+    private void loadLevelInfo(JsonValue root) {
+        levelInfo = new LevelInfo();
+        JsonValue entry = root.get("Level");
+        levelInfo.name = entry.getString("name", "na");
+        levelInfo.speed = entry.getInt("speed", 0);
+        levelInfo.height = entry.getInt("height", 0);
+        levelInfo.cloud = entry.getBoolean("cloud", false);
+        levelInfo.terrain = entry.getString("terrain", "na");
+        levelInfo.music = entry.getString("music", "na");
+    }
+
     public void load(String fileName) {
         FileHandle file = Gdx.files.internal(fileName);
 
@@ -64,6 +84,7 @@ public class LevelLoader {
 
         loadWaypoints(root);
         loadPlants(root);
+        loadLevelInfo(root);
 
         System.out.println("level stat:");
         System.out.println("waypoints: " + wayPoints.size);
