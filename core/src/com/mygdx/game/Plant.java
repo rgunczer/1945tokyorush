@@ -26,6 +26,7 @@ public class Plant {
 
     public float rot = 0f;
     public float scale = 1f;
+    public boolean live = false;
 
     Plant(int type, TextureRegion body, TextureRegion shadow) {
         this.type = type;
@@ -41,20 +42,17 @@ public class Plant {
         pos = new Vector2();
     }
 
+    public void setApperance(Plant other) {
+        this.type = other.type;
+        this.body = other.body;
+        this.shadow = other.shadow;
+    }
+
     public void update(float scrollY) {
         pos.y += scrollY;
     }
 
     public void draw(SpriteBatch batch, Vector2 offset) {
-        //rot += 0.1f;
-
-//        public void draw (TextureRegion region,
-//        float x, float y,
-//        float originX, float originY,
-//        float width, float height,
-//        float scaleX, float scaleY,
-//        float rotation);
-
         float width = body.getRegionWidth() * TokyoRushGame.scale;
         float height = body.getRegionHeight() * TokyoRushGame.scale;
 

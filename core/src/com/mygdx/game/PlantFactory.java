@@ -55,4 +55,40 @@ public class PlantFactory {
         return plants.get(type);
     }
 
+    public Plant get(String type) {
+        if (type.equals("palm0")) {
+            return get(0);
+        }
+
+        if (type.equals("palm1")) {
+            return get(1);
+        }
+
+        if (type.equals("palm2")) {
+            return get(2);
+        }
+
+        if (type.equals("palm3")) {
+            return get(3);
+        }
+
+        if (type.equals("bush0")) {
+            return get(4);
+        }
+
+        if (type.equals("bush1")) {
+            return get(5);
+        }
+
+        if (type.equals("bush2")) {
+            return get(6);
+        }
+
+        if (type.equals("bush3")) {
+            return get(7);
+        }
+
+        return null;
+    }
+
 }

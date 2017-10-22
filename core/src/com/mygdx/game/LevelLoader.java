@@ -18,7 +18,7 @@ public class LevelLoader {
         public String music;
     }
 
-    private class WayPointInfo {
+    public class WayPointInfo {
         int id;
         Vector2 pos;
 
@@ -28,7 +28,7 @@ public class LevelLoader {
         }
     }
 
-    private class PlantInfo {
+    public class PlantInfo {
         String type;
         Vector2 pos;
         PlantInfo(String type, float x, float y) {
@@ -40,6 +40,8 @@ public class LevelLoader {
     public Array<WayPointInfo> wayPoints;
     public Array<PlantInfo> plants;
     public LevelInfo levelInfo;
+
+    public int plantIndex;
 
     private void loadWaypoints(JsonValue root) {
         JsonValue entry = root.get("WayPoints");
@@ -85,6 +87,8 @@ public class LevelLoader {
         loadWaypoints(root);
         loadPlants(root);
         loadLevelInfo(root);
+
+        plantIndex = 0;
 
         System.out.println("level stat:");
         System.out.println("waypoints: " + wayPoints.size);

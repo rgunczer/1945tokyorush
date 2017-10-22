@@ -30,7 +30,7 @@ public class LevelScreen extends Screen {
     Array<Airplane> airplanes;
     Array<Explosion> explosions;
 
-    final int plantCount = 33;
+    final int plantCount = 66;
     final int tankCount = 9;
     final int airplaneCount = 6;
     final int explosionCount = 33;
@@ -41,12 +41,18 @@ public class LevelScreen extends Screen {
 
     Vector2 offset;
     float scrollSpeedY;
+    Vector2 worldPos;
 
     Clouds clouds;
 
+    LevelLoader levelLoader;
+
     @Override
     public void create() {
+        levelLoader = new LevelLoader();
+
         offset = new Vector2();
+        worldPos = new Vector2();
 
         terrain = new Terrain();
         terrain.create();
@@ -94,6 +100,8 @@ public class LevelScreen extends Screen {
         playerBulletRadius = 10f * TokyoRushGame.scale;
         enemyBulletRadius = 10f * TokyoRushGame.scale;
 
+        worldPos.setZero();
+
         offset.set(0f, 0f);
         scrollSpeedY = -1.2f;
         //scrollSpeedY = -0.2f;
@@ -108,7 +116,6 @@ public class LevelScreen extends Screen {
             explosion.live = false;
         }
 
-        LevelLoader levelLoader = new LevelLoader();
         levelLoader.load("jungle_strike.json");
 
         String name = levelLoader.levelInfo.name;
@@ -116,11 +123,20 @@ public class LevelScreen extends Screen {
 
         terrain.init(levelLoader.levelInfo.terrain);
 
-        createRandomPlants();
+        fillPlantsPool();
         createRandomTanks();
         createRandomExplosions();
         createRandomClouds();
         createRandomAirplanes();
+    }
+
+    private Plant getFreePlant() {
+        for(int i = 0; i < plants.size; ++i) {
+            if (!plants.get(i).live) {
+                return plants.get(i);
+            }
+        }
+        return null;
     }
 
     private Vector2 getRandomAirplanePosition() {
@@ -172,7 +188,7 @@ public class LevelScreen extends Screen {
         plant.scale = MathUtils.random(0.6f, 1.0f);
     }
 
-    private void createRandomPlants() {
+    private void fillPlantsPool() {
         OrthographicCamera camera = TokyoRushGame.camera;
 
         Plant template;
@@ -180,10 +196,11 @@ public class LevelScreen extends Screen {
         for(int i = 0; i < plantCount; ++i) {
             template = plantFactory.get(MathUtils.random(0, 3));
             plant = new Plant(template);
-            plant.pos.x = MathUtils.random(-camera.viewportWidth / 4f, camera.viewportWidth);
-            plant.pos.y = MathUtils.random(0f, camera.viewportHeight);
-            plant.rot = MathUtils.random(0f, 360f);
-            plant.scale = MathUtils.random(0.4f, 1.0f);
+            plant.pos.x = 0f; //MathUtils.random(-camera.viewportWidth / 4f, camera.viewportWidth);
+            plant.pos.y = 0f; //MathUtils.random(0f, camera.viewportHeight);
+            plant.rot = 0f; //MathUtils.random(0f, 360f);
+            plant.scale = 1f; //MathUtils.random(0.6f, 1.1f);
+            plant.live = false;
             plants.add(plant);
         }
     }
@@ -216,9 +233,49 @@ public class LevelScreen extends Screen {
         }
     }
 
+    public void getItemsToLevel(float bottomY, float topY) {
+        LevelLoader.PlantInfo plantInfo;
+        for(int i = levelLoader.plantIndex; i < levelLoader.plants.size; ++i) {
+            plantInfo = levelLoader.plants.get(i);
+            if (plantInfo.pos.y < topY) {
+                Plant plant = getFreePlant();
+                if (plant != null) {
+                    plant.live = true;
+                    plant.pos.x = plantInfo.pos.x;
+                    plant.pos.y = plantInfo.pos.y - bottomY;
+
+                    Plant template = plantFactory.get(plantInfo.type);
+
+                    if (plantInfo.type.startsWith("bush")) {
+                        plant.scale = 0.5f; //MathUtils.random(0.5f, 0.6f);
+                        plant.rot = 0f; //MathUtils.random(0f, 360f);
+                    } else {
+                        plant.scale = MathUtils.random(0.8f, 1.1f);
+                        plant.rot = MathUtils.random(0f, 360f);
+                    }
+
+                    if (template != null) {
+                        plant.setApperance(template);
+                    } else {
+                        System.out.println("Plant template NOT found");
+                    }
+                } else {
+                    levelLoader.plantIndex = i;
+                    return;
+                }
+            } else {
+                levelLoader.plantIndex = i;
+                return;
+            }
+        }
+    }
+
     @Override
     public void update(float delta) {
         OrthographicCamera camera = TokyoRushGame.camera;
+        worldPos.y += Math.abs(scrollSpeedY);
+
+        getItemsToLevel(worldPos.y, worldPos.y + camera.viewportHeight);
 
         checkCollisionPlayerBulletsVsEnemy();
         checkCollisionEnemyBulletsVsPlayer();
@@ -226,10 +283,13 @@ public class LevelScreen extends Screen {
         terrain.update(scrollSpeedY);
 
         for(Plant plant: plants) {
-            plant.update(scrollSpeedY);
+            if (plant.live) {
+                plant.update(scrollSpeedY);
 
-            if (plant.pos.y < -camera.viewportWidth / 3f) {
-                putPlantToRandomPosition(plant);
+                if (plant.pos.y < -camera.viewportWidth / 3f) {
+                    //putPlantToRandomPosition(plant);
+                    plant.live = false;
+                }
             }
         }
 
@@ -388,7 +448,9 @@ public class LevelScreen extends Screen {
         }
 
         for (Plant plant : plants) {
-            plant.draw(batch, offset);
+            if (plant.live) {
+                plant.draw(batch, offset);
+            }
         }
 
         for (Airplane airplane: airplanes) {

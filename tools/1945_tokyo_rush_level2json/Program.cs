@@ -678,8 +678,8 @@ namespace LevelToJson
                                     string[] arr = value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                     if (arr.Length == 2)
                                     {
-                                        int x = Convert.ToInt32(arr[0].Substring(1));
-                                        int y = Convert.ToInt32(arr[1].Substring(0, arr[1].Length - 1));
+                                        int x = Convert.ToInt32(arr[0].Substring(1)) * 2;
+                                        int y = Convert.ToInt32(arr[1].Substring(0, arr[1].Length - 1)) * 2;
                                         JArray jarr = new JArray();
                                         jarr.Add(x);
                                         jarr.Add(y);
