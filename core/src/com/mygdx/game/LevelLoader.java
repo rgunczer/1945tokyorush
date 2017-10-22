@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.JsonValue;
 
 public class LevelLoader {
 
-    private class LevelInfo {
+    public class LevelInfo {
         public String name;
         public int speed;
         public int height;

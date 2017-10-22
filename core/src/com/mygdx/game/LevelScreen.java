@@ -49,7 +49,7 @@ public class LevelScreen extends Screen {
         offset = new Vector2();
 
         terrain = new Terrain();
-        terrain.init();
+        terrain.create();
 
         Bullet.create();
 
@@ -110,6 +110,11 @@ public class LevelScreen extends Screen {
 
         LevelLoader levelLoader = new LevelLoader();
         levelLoader.load("jungle_strike.json");
+
+        String name = levelLoader.levelInfo.name;
+        System.out.println("level name: " + name);
+
+        terrain.init(levelLoader.levelInfo.terrain);
 
         createRandomPlants();
         createRandomTanks();

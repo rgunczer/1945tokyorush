@@ -8,7 +8,8 @@ import com.badlogic.gdx.utils.Array;
 
 public class Terrain {
 
-    Texture texture;
+    String[] keys;
+    Texture[] textures;
     TextureRegion region;
 
     int rowCount = 6;
@@ -17,13 +18,40 @@ public class Terrain {
 
     Array<Vector2> positions;
 
-    public void init() {
+    public void create() {
+        final int size = 4;
+
+        textures = new Texture[size];
+        textures[0] = new Texture("terrain_jungle.png");
+        textures[1] = new Texture("terrain_jungle_dark.png");
+        textures[2] = new Texture("terrain_water.png");
+        textures[3] = new Texture("terrain_water_green.png");
+
+        keys = new String[size];
+        keys[0] = "TerrainJungle";
+        keys[1] = "TerrainJungleDark";
+        keys[2] = "TerrainWater";
+        keys[3] = "TerrainWaterGreen";
+    }
+
+    private Texture getTextureFromTerrainTypeName(String typeName) {
+        for(int i = 0; i < keys.length; ++i) {
+            if (keys[i].equals(typeName)) {
+                return textures[i];
+            }
+        }
+        return null;
+    }
+
+    public void init(String terrainTypeName) {
         float scale = TokyoRushGame.scale;
         positions = new Array<Vector2>(rowCount);
-        //texture = new Texture("terrain_jungle.png");
-        //texture = new Texture("terrain_jungle_dark.png");
-        //texture = new Texture("terrain_water.png");
-        texture = new Texture("terrain_water_green.png");
+
+        Texture texture = getTextureFromTerrainTypeName(terrainTypeName);
+        if (texture == null) {
+            System.out.println("Terrain Texture NOT found for: [" + terrainTypeName + "]");
+        }
+
         region = new TextureRegion(texture, 0, 0, texture.getWidth(), texture.getHeight());
         w = region.getRegionWidth() * scale;
         h = region.getRegionHeight() * scale;
