@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
 
 
-public class AirfieldScreen extends Screen {
+public class AirfieldScreen extends BaseScreen {
 
     public enum AirfieldStateEnum {
         IDLE,
@@ -120,7 +120,7 @@ public class AirfieldScreen extends Screen {
     }
 
     @Override
-    public void render() {
+    public void render(float dt) {
         beginRender();
 
         airfield.draw(batch);

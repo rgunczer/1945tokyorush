@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
-public class LevelScreen extends Screen {
+public class LevelScreen extends BaseScreen {
 
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
@@ -438,7 +438,7 @@ public class LevelScreen extends Screen {
     }
 
     @Override
-    public void render() {
+    public void render(float dt) {
         beginRender();
 
         terrain.draw(batch, offset);

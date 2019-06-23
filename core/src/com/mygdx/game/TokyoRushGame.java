@@ -22,7 +22,7 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
     public static LevelScreen levelScreen;
     public static AirfieldScreen airfieldScreen;
     public static MainMenuScreen mainMenuScreen;
-    public static Screen currentScreen;
+    public static BaseScreen currentScreen;
 
     public static Player player;
     public static OrthographicCamera camera;
@@ -83,7 +83,7 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
         Gdx.gl.glClearColor(75f/255f, 94f/255f, 15f/255f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        currentScreen.render();
+        currentScreen.render(1f);
 	}
 	
 	@Override

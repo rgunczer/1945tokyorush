@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector3;
 
-public class MainMenuScreen extends Screen {
+public class MainMenuScreen extends BaseScreen {
 
     public enum MenuAction {
         PLAY,
@@ -86,7 +86,7 @@ public class MainMenuScreen extends Screen {
     }
 
     @Override
-    public void render() {
+    public void render(float dt) {
         beginRender();
         background.draw(batch);
         currentMenu.render(batch);
