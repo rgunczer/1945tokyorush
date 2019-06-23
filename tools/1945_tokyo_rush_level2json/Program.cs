@@ -873,7 +873,7 @@ namespace LevelToJson
             string dirName = Path.GetDirectoryName(fullPath);
             string fullPathToConvertedFile = Path.Combine(dirName, fileName);
 
-            JToken root = ConvertToJson(ReadFileIntoBuffer(args[0]));
+            JToken root = ConvertToJson(ReadFileIntoBuffer(fullPath));
             string json = root.ToString();
             Console.WriteLine(json);
             File.WriteAllText(fullPathToConvertedFile, json);
