@@ -40,11 +40,6 @@ namespace LevelToJson
             Console.WriteLine("Path to *.1945 file to load and to convert to json");
         }
 
-        static string[] ReadFileIntoBuffer(string pathToFile)
-        {
-            return File.ReadAllLines(pathToFile);
-        }
-
         static ParserState FindMainObject(string line)
         {
             switch(line)
@@ -873,7 +868,7 @@ namespace LevelToJson
             string dirName = Path.GetDirectoryName(fullPath);
             string fullPathToConvertedFile = Path.Combine(dirName, fileName);
 
-            JToken root = ConvertToJson(ReadFileIntoBuffer(fullPath));
+            JToken root = ConvertToJson(File.ReadAllLines(fullPath));
             string json = root.ToString();
             Console.WriteLine(json);
             File.WriteAllText(fullPathToConvertedFile, json);
