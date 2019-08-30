@@ -16,6 +16,17 @@ public class LevelLoader {
         public boolean cloud;
         public String terrain;
         public String music;
+
+        public void dump() {
+            System.out.println(">>> Level Info <<<");
+            System.out.println("Name: " + this.name);
+            System.out.println("Speed: " + this.speed);
+            System.out.println("Height: " + this.height);
+            System.out.println("Cloud: " + this.cloud);
+            System.out.println("Terrain: " + this.terrain);
+            System.out.println("Music: " + this.music);
+            System.out.println("-------------------------");
+        }
     }
 
     public class WayPointInfo {
@@ -79,7 +90,7 @@ public class LevelLoader {
     }
 
     public void load(String fileName) {
-        FileHandle file = Gdx.files.internal(fileName);
+        FileHandle file = Gdx.files.internal("levels/" + fileName);
 
         JsonReader jsonReader = new JsonReader();
         JsonValue root = jsonReader.parse(file);
@@ -93,6 +104,7 @@ public class LevelLoader {
         System.out.println("level stat:");
         System.out.println("waypoints: " + wayPoints.size);
         System.out.println("plants: " + plants.size);
+        this.levelInfo.dump();
         System.out.println("-----------");
     }
 }

@@ -129,3 +129,5 @@ tools/1945_tokyo_rush_level2json/obj/Debug/LevelToJson.csproj.CopyComplete
 tools/1945_tokyo_rush_level2json/obj/
 tools/1945_tokyo_rush_level2json/packages/
 tools/1945_tokyo_rush_level2json/.vs/
+*.user
+*.suo

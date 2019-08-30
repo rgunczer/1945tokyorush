@@ -18,8 +18,6 @@ public abstract class BaseScreen implements Screen {
     {
         mainStage = new Stage();
         uiStage = new Stage();
-
-        init();
     }
 
     protected void beginRender() {
