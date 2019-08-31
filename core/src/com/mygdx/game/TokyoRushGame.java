@@ -73,10 +73,10 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
         levelScreen.create();
 
         // init
-        levelScreen.init();
+//        levelScreen.init();
 
         currentScreen = mainMenuScreen;
-        currentScreen = levelScreen;
+//        currentScreen = levelScreen;
 	}
 
 	@Override

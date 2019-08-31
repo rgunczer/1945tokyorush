@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.menu.MenuGroup;
 import com.mygdx.game.menu.MenuItem;
+import com.mygdx.game.menu.MenuState;
 import com.mygdx.game.menu.MenuTitle;
 import com.mygdx.game.TextureFactory;
 import com.mygdx.game.TokyoRushGame;
@@ -66,8 +67,6 @@ public class MainMenuScreen extends BaseScreen {
         aboutMenu.add(new MenuItem("menu-item-back.png", MenuAction.BACK));
         aboutMenu.add(new MenuTitle("menu-title-about.png"));
 
-
-
         float scale = TokyoRushGame.scale;
         float w = background.getWidth() * scale;
         float h = background.getHeight() * scale;
@@ -77,7 +76,6 @@ public class MainMenuScreen extends BaseScreen {
         background.setBounds(x, y, w, h);
 
         currentMenu = mainMenu;
-        //currentMenu = difficultyMenu;
     }
 
     @Override
@@ -123,6 +121,7 @@ public class MainMenuScreen extends BaseScreen {
                        break;
 
                    case BACK:
+                       mainMenu.setState(MenuState.ANIM_APPEAR);
                        currentMenu = mainMenu;
                        break;
 
