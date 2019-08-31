@@ -121,7 +121,6 @@ public class MainMenuScreen extends BaseScreen {
                        break;
 
                    case BACK:
-                       mainMenu.setState(MenuState.ANIM_APPEAR);
                        currentMenu = mainMenu;
                        break;
 
@@ -137,6 +136,7 @@ public class MainMenuScreen extends BaseScreen {
                        TokyoRushGame.showScreen(TokyoRushGame.ScreenEnum.AIRFIELD);
                        break;
                }
+               currentMenu.setState(MenuState.ANIM_APPEAR);
             }
         }
     }
