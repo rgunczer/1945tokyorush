@@ -12,7 +12,7 @@ public class PlantFactory {
 
     public void create() {
         plants = new Array<Plant>(12);
-        texture = new Texture("plants.png");
+        texture = TextureFactory.create("plants.png");
 
         TextureRegion body;
         TextureRegion shadow;

@@ -1,10 +1,12 @@
-package com.mygdx.game;
+package com.mygdx.game.screens;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.TimeUtils;
+import com.mygdx.game.Player;
+import com.mygdx.game.TextureFactory;
+import com.mygdx.game.TokyoRushGame;
 
 
 public class AirfieldScreen extends BaseScreen {
@@ -47,7 +49,7 @@ public class AirfieldScreen extends BaseScreen {
         state = AirfieldStateEnum.IDLE;
         int sc = 2;
 
-        airfieldTexture = new Texture("airfield2.png");
+        airfieldTexture = TextureFactory.create("airfield2.png");
 
         airfield = new Sprite(airfieldTexture, 250*sc, 0, 640, 1440);
 

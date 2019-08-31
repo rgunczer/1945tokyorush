@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.screens;
 
 
 import com.badlogic.gdx.graphics.Color;
@@ -9,6 +9,19 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.Airplane;
+import com.mygdx.game.AirplaneFactory;
+import com.mygdx.game.Bullet;
+import com.mygdx.game.Clouds;
+import com.mygdx.game.Explosion;
+import com.mygdx.game.LevelLoader;
+import com.mygdx.game.Plant;
+import com.mygdx.game.PlantFactory;
+import com.mygdx.game.Player;
+import com.mygdx.game.Tank;
+import com.mygdx.game.TankFactory;
+import com.mygdx.game.Terrain;
+import com.mygdx.game.TokyoRushGame;
 
 public class LevelScreen extends BaseScreen {
 

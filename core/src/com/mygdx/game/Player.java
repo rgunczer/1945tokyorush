@@ -33,12 +33,12 @@ public class Player {
     float bulletSpeed;
     float hitCooldown;
     float takeOffSpeed = 100f; ///400f;
-    float boundingCircleRadius;
+    public float boundingCircleRadius;
     float distanceToTarget;
 
     float fingerOffsetY;
 
-    Circle boundingCircle;
+    public  Circle boundingCircle;
 
     public GunTypeEnum gunType;
 
@@ -48,7 +48,7 @@ public class Player {
 
     Vector2 target = new Vector2();
     Vector2 diff = new Vector2();
-    Vector2 pos = new Vector2();
+    public Vector2 pos = new Vector2();
     Vector2 posTarget = new Vector2();
     Vector2 velocity = new Vector2();
 
@@ -61,7 +61,7 @@ public class Player {
     public float shadowDistance;
     public float scaleShadow;
 
-    PlayerStateEnum state;
+    public PlayerStateEnum state;
 
     public float scale = 1f;
 
@@ -70,7 +70,7 @@ public class Player {
         state = PlayerStateEnum.IDLE_ON_AIRFIELD;
         final String textureName = "player-and-propeller.png";
 
-        texture = new Texture(textureName);
+        texture = TextureFactory.create(textureName);
         hit = new TextureRegion(texture, 0, 0, 168, 168);
         normal = new TextureRegion(texture, 168, 0, 168, 168);
         shadow = new TextureRegion(texture, 336, 0, 168, 168);

@@ -1,15 +1,16 @@
-package com.mygdx.game;
+package com.mygdx.game.menu;
 
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.TokyoRushGame;
 
 
 public class MenuGroup {
 
     MenuTitle menuTitle;
-    Array<MenuItem> menuItems;
+    public Array<MenuItem> menuItems;
     float gapBetweenMenuItemsY = 0.12f;
 
     public MenuGroup() {

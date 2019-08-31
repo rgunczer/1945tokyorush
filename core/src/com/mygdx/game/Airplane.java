@@ -23,10 +23,10 @@ public class Airplane {
     public TextureRegion body;
     public TextureRegion shadow;
     AirplaneTemplate template;
-    Circle boundingCircle;
+    public Circle boundingCircle;
     float hitCooldown;
     int hitPoint;
-    boolean dead;
+    public boolean dead;
 
     public Airplane(AirplaneTemplate template) {
         this.template = template;

@@ -21,11 +21,16 @@ public class Terrain {
     public void create() {
         final int size = 4;
 
-        textures = new Texture[size];
-        textures[0] = new Texture("terrain_jungle.png");
-        textures[1] = new Texture("terrain_jungle_dark.png");
-        textures[2] = new Texture("terrain_water.png");
-        textures[3] = new Texture("terrain_water_green.png");
+        final String[] textureFileNames = {
+                "terrain_jungle.png", "terrain_jungle_dark.png", "terrain_water.png", "terrain_water_green.png"
+        };
+
+        textures = TextureFactory.crreateArray(textureFileNames);
+//        textures = new Texture[size];
+//        textures[0] = TextureFactory.create("terrain_jungle.png");
+//        textures[1] = TextureFactory.create("terrain_jungle_dark.png");
+//        textures[2] = TextureFactory.create("terrain_water.png");
+//        textures[3] = TextureFactory.create("terrain_water_green.png");
 
         keys = new String[size];
         keys[0] = "TerrainJungle";

@@ -1,9 +1,14 @@
-package com.mygdx.game;
+package com.mygdx.game.screens;
 
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.game.menu.MenuGroup;
+import com.mygdx.game.menu.MenuItem;
+import com.mygdx.game.menu.MenuTitle;
+import com.mygdx.game.TextureFactory;
+import com.mygdx.game.TokyoRushGame;
 
 public class MainMenuScreen extends BaseScreen {
 
@@ -32,7 +37,7 @@ public class MainMenuScreen extends BaseScreen {
 
     @Override
     public void create() {
-        backgroundTexture = new Texture("main_menu.png");
+        backgroundTexture = TextureFactory.create("main_menu.png");
         background = new Sprite(backgroundTexture, 660, 0, 640, 1440);
 
         mainMenu = new MenuGroup();

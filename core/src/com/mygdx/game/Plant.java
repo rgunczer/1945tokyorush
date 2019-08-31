@@ -28,14 +28,14 @@ public class Plant {
     public float scale = 1f;
     public boolean live = false;
 
-    Plant(int type, TextureRegion body, TextureRegion shadow) {
+    public Plant(int type, TextureRegion body, TextureRegion shadow) {
         this.type = type;
         this.body = body;
         this.shadow = shadow;
         pos = new Vector2();
     }
 
-    Plant(Plant other) {
+    public Plant(Plant other) {
         this.type = other.type;
         this.body = other.body;
         this.shadow = other.shadow;

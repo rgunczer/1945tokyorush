@@ -15,15 +15,15 @@ public class Bullet {
     public static TextureRegion yellowBullet;
     public static TextureRegion blueBullet;
 
-    boolean live;
+    public boolean live;
 
-    Vector2 pos;
-    Vector2 vel;
-    int hitPoint;
-    float rot;
+    public Vector2 pos;
+    public Vector2 vel;
+    public int hitPoint;
+    public float rot;
     TextureRegion current;
 
-    Bullet() {
+    public Bullet() {
         live = false;
         pos = new Vector2();
         vel = new Vector2();
@@ -31,7 +31,7 @@ public class Bullet {
     }
 
     public static void create() {
-        bulletTexture = new Texture("bullets.png");
+        bulletTexture = TextureFactory.create("bullets.png");
         playerBullet = new TextureRegion(bulletTexture, 0, 0, 64, 64);
         redBullet = new TextureRegion(bulletTexture, 64, 0, 64, 64);
         yellowBullet = new TextureRegion(bulletTexture, 128, 0, 64, 64);

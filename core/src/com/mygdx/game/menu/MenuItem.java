@@ -1,17 +1,19 @@
-package com.mygdx.game;
+package com.mygdx.game.menu;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.TextureFactory;
+import com.mygdx.game.screens.MainMenuScreen;
 
 public class MenuItem {
 
     private Texture texture;
     public Sprite sprite;
-    MainMenuScreen.MenuAction action;
+    public MainMenuScreen.MenuAction action;
 
     public MenuItem(String textureName, MainMenuScreen.MenuAction action) {
-        texture = new Texture(textureName);
+        texture = TextureFactory.create(textureName);
         sprite = new Sprite(texture);
         this.action = action;
     }

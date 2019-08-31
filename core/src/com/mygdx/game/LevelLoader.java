@@ -40,9 +40,9 @@ public class LevelLoader {
     }
 
     public class PlantInfo {
-        String type;
-        Vector2 pos;
-        PlantInfo(String type, float x, float y) {
+        public String type;
+        public Vector2 pos;
+        public PlantInfo(String type, float x, float y) {
             this.type = type;
             this.pos = new Vector2(x, y);
         }

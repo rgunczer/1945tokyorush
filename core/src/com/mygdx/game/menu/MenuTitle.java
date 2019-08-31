@@ -1,9 +1,10 @@
-package com.mygdx.game;
+package com.mygdx.game.menu;
 
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.TextureFactory;
 
 public class MenuTitle {
 
@@ -11,7 +12,7 @@ public class MenuTitle {
     Sprite sprite;
 
     public MenuTitle(String textureName) {
-        texture = new Texture(textureName);
+        texture = TextureFactory.create(textureName);
         sprite = new Sprite(texture);
     }
 

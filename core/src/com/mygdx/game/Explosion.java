@@ -13,13 +13,13 @@ public class Explosion {
     private float startTime;
     private static Animation<TextureRegion> anim;
 
-    Vector2 pos = new Vector2();
+    public Vector2 pos = new Vector2();
     public boolean live;
     public float scale = 0.9f;
     float rot = 0f;
 
     public static void create() {
-        texture = new Texture("explosion.png");
+        texture = TextureFactory.create("explosion.png");
         TextureRegion[][] regions = TextureRegion.split(texture, 128, 128);
 
         int index = 0;

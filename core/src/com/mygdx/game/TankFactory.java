@@ -21,7 +21,7 @@ public class TankFactory {
         tankTemplates = new Array<TankTemplate>(MAX_TANK_TYPES);
         turretTemplates = new Array<TurretTemplate>(MAX_TURRET_TYPES);
 
-        texture = new Texture("land_units.png");
+        texture = TextureFactory.create("land_units.png");
 
         TankTemplate tankTemplate;
         TurretTemplate turretTemplate;
@@ -132,7 +132,7 @@ public class TankFactory {
         return tankTemplate;
     }
 
-    Tank get(int type) {
+    public Tank get(int type) {
         TankTemplate tankTemplate = null;
         TurretTemplate turretTemplate = null;
 

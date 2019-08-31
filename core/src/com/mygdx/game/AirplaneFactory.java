@@ -33,7 +33,7 @@ public class AirplaneFactory {
     float boundingCircleRadius;
 
     public void create() {
-        texture = new Texture("airplanes.png");
+        texture = TextureFactory.create("airplanes.png");
 
         boundingCircleRadius = 30f * TokyoRushGame.scale;
 
@@ -119,7 +119,7 @@ public class AirplaneFactory {
         return template;
     }
 
-    Airplane get(int type) {
+    public Airplane get(int type) {
         AirplaneTemplate template = null;
 
         if (type == Airplane.ZERO_PANTHER) {

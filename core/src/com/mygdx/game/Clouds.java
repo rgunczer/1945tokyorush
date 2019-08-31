@@ -27,7 +27,7 @@ public class Clouds {
     private Array<CloudInfo> cloudInfos;
 
     public static void create() {
-        texture = new Texture("clouds.png");
+        texture = TextureFactory.create("clouds.png");
         cloud0 = new TextureRegion(texture, 0, 0, 512, 512);
         cloud1 = new TextureRegion(texture, 512, 0, 512, 512);
     }

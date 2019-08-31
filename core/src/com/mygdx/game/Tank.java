@@ -24,7 +24,7 @@ public class Tank {
     TextureRegion shadow;
 
     float rot;
-    Vector2 pos;
+    public Vector2 pos;
     Vector2 vel;
     float scale;
     int hitPoint;
@@ -33,7 +33,7 @@ public class Tank {
 
     TankTemplate template;
 
-    Circle boundingCircle;
+    public Circle boundingCircle;
 
     public TankState state;
 
