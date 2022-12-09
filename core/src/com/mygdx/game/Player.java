@@ -32,7 +32,7 @@ public class Player {
 
     float bulletSpeed;
     float hitCooldown;
-    float takeOffSpeed = 100f; ///400f;
+    float takeOffSpeed = 100f;
     public float boundingCircleRadius;
     float distanceToTarget;
 

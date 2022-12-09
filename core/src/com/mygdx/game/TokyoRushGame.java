@@ -76,65 +76,22 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
 //        levelScreen.init();
 
         currentScreen = mainMenuScreen;
-//        currentScreen = levelScreen;
 	}
 
 	@Override
 	public void render () {
-        update();
+        float dt = Gdx.graphics.getDeltaTime();
+        currentScreen.update(dt);
 
-//		Gdx.gl.glClearColor(0, 0, 1, 1);
-        Gdx.gl.glClearColor(75f/255f, 94f/255f, 15f/255f, 1f);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        currentScreen.render(1f);
+        currentScreen.render(dt);
 	}
 	
 	@Override
 	public void dispose () {
-		//batch.dispose();
-	}
-
-	private void update() {
-        //long elapsedTime = TimeUtils.timeSinceMillis(lastTime);
-
-        //System.out.println("elapsed time: " + elapsedTime);
-        final float elapsedTime = 1f / 60f;
-        currentScreen.update(elapsedTime);
-        //lastTime = TimeUtils.millis();
-
-/*
-        if (now - lastSpawn > SPAWN_DELTA) {
-            lastSpawn = now;
-            int column = MathUtils.random(0, COLUMNS - 1);
-
-            Sprite block = new Sprite(img);
-            block.setBounds(column * blockSize, -blockSize, blockSize, blockSize);
-            block.setOriginCenter();
-
-            blocks[column].add(block);
-        }
-
-        // loop through all Sprites
-        for(int column = 0; column < blocks.length; ++column) {
-            for(int i = 0; i < blocks[column].size(); ++i) {
-                Sprite block = blocks[column].get(i);
-                block.translateY(velocity);
-
-                float maxY;
-                if (i > 0) {
-                    Sprite previous = blocks[column].get(i - 1);
-                    maxY = previous.getY() - block.getHeight();
-                } else {
-                    maxY = camera.viewportHeight - block.getHeight();
-                }
-
-                if (block.getY() > maxY) {
-                    block.setY(maxY);
-                }
-            }
-        }
-*/
+        //batch.dispose();
     }
 
     @Override

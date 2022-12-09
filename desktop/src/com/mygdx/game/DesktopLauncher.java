@@ -8,9 +8,9 @@ import com.mygdx.game.TokyoRushGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-		config.setForegroundFPS(60);
+		config.setForegroundFPS(30);
 		config.setTitle("1945: Tokyo Rush");
-		config.setWindowedMode(640, 1136); // hardcode iPhone SE (1st gen) resolution
+		config.setWindowedMode(640, 1440); // hardcode iPhone SE (1st gen) resolution
 		new Lwjgl3Application(new TokyoRushGame(), config);
 	}
 }
