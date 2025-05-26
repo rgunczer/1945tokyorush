@@ -1,4 +1,4 @@
-# 1945TokyoRush
+# 1945: Tokyo Rush
 
 ![Concept](./media/shootemup-concept.png)
 
