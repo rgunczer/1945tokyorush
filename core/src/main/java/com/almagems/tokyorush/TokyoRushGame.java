@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 
 import com.almagems.tokyorush.screens.AirfieldScreen;
@@ -35,6 +36,9 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
     public static float scale;
     public static TokyoRushGame instance;
 
+    public record Bullet(int x, int y) {}
+
+
     public static void showScreen(ScreenEnum screen) {
         switch (screen) {
             case AIRFIELD:
@@ -55,6 +59,9 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
 	@Override
 	public void create () {
         instance = this;
+
+        final var bullet = new Bullet(10,12);
+        System.out.println(bullet);
 
         Gdx.input.setInputProcessor(this);
 
