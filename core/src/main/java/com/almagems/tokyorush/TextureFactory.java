@@ -10,10 +10,10 @@ public class TextureFactory {
         return new Texture(folderName + "/" + fileName);
     }
 
-    public static Texture[] crreateArray(String[] fileNames) {
+    public static Texture[] createArray(String[] fileNames) {
         Texture[] textureArray = new Texture[fileNames.length];
 
-        for (int i = 0; i < fileNames.length - 1; ++i) {
+        for (int i = 0; i < fileNames.length; ++i) {
             textureArray[i] = create(fileNames[i]);
         }
 

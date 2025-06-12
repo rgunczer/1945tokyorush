@@ -25,7 +25,7 @@ public class Terrain {
                 "terrain_jungle.png", "terrain_jungle_dark.png", "terrain_water.png", "terrain_water_green.png"
         };
 
-        textures = TextureFactory.crreateArray(textureFileNames);
+        textures = TextureFactory.createArray(textureFileNames);
 //        textures = new Texture[size];
 //        textures[0] = TextureFactory.create("terrain_jungle.png");
 //        textures[1] = TextureFactory.create("terrain_jungle_dark.png");
