@@ -36,6 +36,8 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
     public static float scale;
     public static TokyoRushGame instance;
 
+    private Vector3 touchPosition = new Vector3();
+
     public record Bullet(int x, int y) {}
 
 
@@ -125,8 +127,8 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Vector3 position = camera.unproject(new Vector3(screenX, screenY, 0)); // TODO: fix GC
-        currentScreen.touchDown(position);
+        camera.unproject(touchPosition.set(screenX, screenY, 0));
+        currentScreen.touchDown(touchPosition);
         return false;
     }
 
@@ -137,8 +139,8 @@ public class TokyoRushGame extends ApplicationAdapter implements InputProcessor 
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        Vector3 position = camera.unproject(new Vector3(screenX, screenY, 0)); // TODO: fix GC
-        currentScreen.touchMove(position);
+        camera.unproject(touchPosition.set(screenX, screenY, 0));
+        currentScreen.touchMove(touchPosition);
         return false;
     }
 
